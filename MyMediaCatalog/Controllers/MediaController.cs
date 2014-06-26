@@ -44,7 +44,11 @@ namespace MyMediaCatalog.Controllers
             {
                 db.Media.Add(media);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
+
+                var list = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType);
+                return PartialView("_MediaListView", list);
             }
 
             ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", media.CompanyId);
@@ -82,51 +86,32 @@ namespace MyMediaCatalog.Controllers
             ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name", media.MediaTypeId);
             return View(media);
         }
-
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Delete(int id)
         {
             var media = db.Media.Find(id);
             media.DateDeleted = DateTime.Now.Date;
             //db.Media.Remove(media);
-            db.Media.Attach(media);
+            //db.Media.Attach(media);
             db.SaveChanges();
-            if (Request.IsAjaxRequest())
+
+            if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
+
+            var list = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType).ToList();
+            return PartialView("_MediaListView", list);
+        }
+
+        public ActionResult CreateNewMedia(int companyId)
+        {
+            var media = new Media()
             {
-                var list = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType).ToList();
-                return PartialView("_Media", list);
-            }
-            return RedirectToAction("Index");
+                CompanyId = companyId
+            };
+            ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name");
+            return PartialView("_CreateMedia", media);
         }
 
 
-        // GET: Media/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Media media = db.Media.Find(id);
-        //    if (media == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(media);
-        //}
-
-        // POST: Media/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Media media = db.Media.Find(id);
-        //    db.Media.Remove(media);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {

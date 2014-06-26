@@ -41,6 +41,7 @@ namespace MyMediaCatalog.Migrations
                 );
 
             context.Roles.AddOrUpdate(x => x.Name,
+                new Role() { Name = "Author" },
                 new Role() { Name = "Assistant" },
                 new Role() { Name = "Editor" },
                 new Role() { Name = "Illustrator" },

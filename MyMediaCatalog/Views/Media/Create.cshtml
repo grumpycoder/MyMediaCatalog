@@ -90,7 +90,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanyId, "Company", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("CompanyId", null, "-- Select Company --", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.CompanyId, null, "-- Select Company --", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CompanyId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -98,7 +98,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MediaTypeId, "Media Type", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("MediaTypeId", null, "-- Select Type --", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.MediaTypeId, null, "-- Select Type --", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.MediaTypeId, "", new { @class = "text-danger" })
             </div>
         </div>

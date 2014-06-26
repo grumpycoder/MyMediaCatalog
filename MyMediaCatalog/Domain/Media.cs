@@ -7,12 +7,14 @@ namespace MyMediaCatalog.Domain
     public class Media
     {
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
         public string ISBN { get; set; }
         [DataType(DataType.MultilineText)]
         public string Summary { get; set; }
 
         [Display(Name = "Receipt")]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? ReceiptDate { get; set; }
         public bool? Review { get; set; }
         public bool? Purchased { get; set; }
@@ -21,7 +23,11 @@ namespace MyMediaCatalog.Domain
 
         public DateTime? DateDeleted { get; set; }
 
+        [Required]
+        [Display(Name = "Company")]
         public int? CompanyId { get; set; }
+        [Required]
+        [Display(Name = "Media Type")]
         public int? MediaTypeId { get; set; }
 
         [Display(Name = "Company")]

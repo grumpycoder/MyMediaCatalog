@@ -15,13 +15,11 @@ namespace MyMediaCatalog.Controllers
     {
         private AppContext db = new AppContext();
 
-        // GET: Company
         public ActionResult Index()
         {
             return View(db.Companies.ToList());
         }
 
-        // GET: Company/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,15 +34,11 @@ namespace MyMediaCatalog.Controllers
             return View(company);
         }
 
-        // GET: Company/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Company/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name")] Company company)
@@ -83,8 +77,13 @@ namespace MyMediaCatalog.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 db.Entry(company).State = EntityState.Modified;
                 db.SaveChanges();
+                if (Request.IsAjaxRequest())
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.OK);
+                }
                 return RedirectToAction("Index");
             }
             return View(company);

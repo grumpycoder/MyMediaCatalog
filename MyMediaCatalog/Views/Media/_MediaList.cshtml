@@ -69,15 +69,11 @@
                 @Html.DisplayFor(modelItem => item.Company.Name)
             </td>
             <td style="white-space: nowrap;">
-                @*@Html.ActionLink("Details", "Details", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-default btn-sm" })*@
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })
-                @*@Html.ActionLink("Delete", "Delete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-warning btn-sm" })*@
-                
-                @Ajax.ActionLink("Delete", "Delete", "Media", new { item.Id }, new AjaxOptions()
+                @Html.ActionLink(" ", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "glyphicon glyphicon-edit" }) | 
+                @Ajax.ActionLink(" ", "Delete", "Media", new { item.Id }, new AjaxOptions()
                     {
                         UpdateTargetId = "mediaList"
-                    }, htmlAttributes: new { @class = "btn btn-warning btn-sm" })
-
+                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
             </td>
         </tr>
     }

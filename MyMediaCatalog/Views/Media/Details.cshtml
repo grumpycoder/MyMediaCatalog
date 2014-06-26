@@ -8,85 +8,87 @@
 
 <div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Company.Name)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Company.Name)
-        </dd>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Company.Name)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MediaType.Name)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Company.Name)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.MediaType.Name)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.MediaType.Name)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ISBN)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.MediaType.Name)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ISBN)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.ISBN)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Summary)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ISBN)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Summary)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Summary)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ReceiptDate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Summary)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ReceiptDate)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.ReceiptDate)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Review)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ReceiptDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Review)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Review)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Purchased)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Review)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Purchased)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Purchased)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Donate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Purchased)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Donate)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Donate)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Donate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Active)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Active)
+            </dt>
 
-    </dl>
+            <dd>
+                @Html.DisplayFor(model => model.Active)
+            </dd>
+
+        </dl>
+
+    <br />
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
-
     </p>
-     <hr />
+    <hr />
     <h4>Staff</h4>
     <div class="well well-sm">
         @Html.Action("CreateNewStaffMember", "StaffMembers", new { mediaId = Model.Id })

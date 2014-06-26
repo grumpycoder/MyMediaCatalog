@@ -282,7 +282,10 @@
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
     <Content Include="Views\StaffMembers\_CreateStaffMember.cshtml" />
     <Content Include="Views\StaffMembers\_StaffMembers.cshtml" />
-    <Content Include="Views\Media\_Media.cshtml" />
+    <Content Include="Views\Media\_MediaList.cshtml" />
+    <Content Include="Views\Company\_CompanyList.cshtml" />
+    <Content Include="Views\Media\_CreateMedia.cshtml" />
+    <Content Include="Views\Media\_MediaListView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
