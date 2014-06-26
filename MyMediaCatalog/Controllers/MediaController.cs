@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -13,7 +14,7 @@ namespace MyMediaCatalog.Controllers
 
         public ActionResult Index()
         {
-            var media = db.Media.Include(m => m.Company).Include(m => m.MediaType);
+            var media = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType);
             return View(media.ToList());
         }
 
@@ -88,11 +89,13 @@ namespace MyMediaCatalog.Controllers
         public ActionResult Delete(int id)
         {
             var media = db.Media.Find(id);
-            db.Media.Remove(media);
+            media.DateDeleted = DateTime.Now.Date;
+            //db.Media.Remove(media);
+            db.Media.Attach(media);
             db.SaveChanges();
             if (Request.IsAjaxRequest())
             {
-                var list = db.Media.Include(m => m.Company).Include(m => m.MediaType).ToList();
+                var list = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType).ToList();
                 return PartialView("_Media", list);
             }
             return RedirectToAction("Index");
@@ -115,15 +118,15 @@ namespace MyMediaCatalog.Controllers
         //}
 
         // POST: Media/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Media media = db.Media.Find(id);
-            db.Media.Remove(media);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    Media media = db.Media.Find(id);
+        //    db.Media.Remove(media);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

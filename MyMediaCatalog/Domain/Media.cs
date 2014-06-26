@@ -19,6 +19,8 @@ namespace MyMediaCatalog.Domain
         public bool? Donate { get; set; }
         public bool? Active { get; set; }
 
+        public DateTime? DateDeleted { get; set; }
+
         public int? CompanyId { get; set; }
         public int? MediaTypeId { get; set; }
 
