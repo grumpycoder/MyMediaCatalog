@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MyMediaCatalog.Domain.StaffMember>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Media.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Person.Firstname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Person.Lastname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Media.Company.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Person.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Person.Firstname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Person.Lastname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Role.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Media.Company.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

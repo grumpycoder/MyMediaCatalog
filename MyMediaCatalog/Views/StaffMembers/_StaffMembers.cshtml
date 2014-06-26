@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MyMediaCatalog.Domain.StaffMember>
+
+<ul class="list-group">
+    @if (!Model.Any())
+    {
+        <li class="list-group-item">
+            No Staff Members 
+        </li>
+    }
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div>
+                @Html.DisplayName(item.Role.Name)
+            </div>
+            <div>
+                @Html.ActionLink(@String.Format("{0} {1}", @item.Person.Firstname, @item.Person.Lastname), "Details", "People", new { id = @item.PersonId }, null)
+                <span class="pull-right">
+                    @*<a href="@Url.Action("DeleteStaffMember", "StaffMembers", new { item.Id })">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>*@
+                    @Ajax.ActionLink(" ", "DeleteStaffMember", "StaffMembers", new { item.Id }, new AjaxOptions()
+                    {
+                        UpdateTargetId = "staffList"
+                    }, htmlAttributes: new {@class="glyphicon glyphicon-remove"})
+                </span>
+            </div>
+
+        </li>
+    }
+</ul>
+
+
+

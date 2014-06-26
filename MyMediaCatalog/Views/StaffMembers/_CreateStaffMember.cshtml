@@ -1,0 +1,52 @@
+﻿@model MyMediaCatalog.Models.StaffMemberViewModel
+
+@*@using (Html.BeginForm("CreateStaffMember", "StaffMembers", FormMethod.Post, htmlAttributes: new { @class = "form-inline" }))*@
+@using (Ajax.BeginForm("CreateStaffMember", "StaffMembers", new AjaxOptions()
+                                                                {
+                                                                    HttpMethod = "POST",
+                                                                    OnFailure = "onFailure()",
+                                                                    InsertionMode = InsertionMode.Replace, 
+                                                                    UpdateTargetId = "staffList", 
+                                                                    OnSuccess = "onSuccess"
+                                                                }, htmlAttributes: new { @class = "form-inline", id = "createStaffMember" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.MediaId)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "sr-only" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeHolder = "First and Last Name" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "sr-only" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RoleId, "Role", htmlAttributes: new { @class = "sr-only" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.RoleId, null, "-- Select Role --", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-default">Add Member</button>
+
+}
+
+<script type="text/javascript">
+    function onSuccess() {
+        console.log('success');
+        $('form select').val(null);
+        $('form input[type="text"]').val(null);
+    }
+
+</script>

@@ -1,0 +1,104 @@
+﻿@model MyMediaCatalog.Domain.Media
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<h2>@Model.Title</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Company.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Company.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MediaType.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MediaType.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ISBN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ISBN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Summary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Summary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Review)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Review)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Purchased)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purchased)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Donate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Donate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+
+    </dl>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+
+    </p>
+     <hr />
+    <h4>Staff</h4>
+    <div class="well well-sm">
+        @Html.Action("CreateNewStaffMember", "StaffMembers", new { mediaId = Model.Id })
+    </div>
+    <div id="staffList" style="overflow-x: hidden; overflow-y: auto;">
+        @Html.Partial("../StaffMembers/_StaffMembers", Model.StaffMembers)
+    </div>
+</div>
+
+
+
+
+<p>
+    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+</p>
