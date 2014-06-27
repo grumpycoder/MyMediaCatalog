@@ -90,29 +90,16 @@ namespace MyMediaCatalog.Controllers
             return View(person);
         }
 
-        // GET: People/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Person person = db.Persons.Find(id);
-            if (person == null)
-            {
-                return HttpNotFound();
-            }
-            return View(person);
-        }
-
-        // POST: People/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
             Person person = db.Persons.Find(id);
             db.Persons.Remove(person);
             db.SaveChanges();
+            if (Request.IsAjaxRequest())
+            {
+                var list = db.Persons;
+                return PartialView("_PersonList", list);
+            }
             return RedirectToAction("Index");
         }
 

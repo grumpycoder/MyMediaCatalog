@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MyMediaCatalog.Domain.Person>
+<style>
+    .table-hover {
+        cursor: pointer;
+    }
+
+    .table-hover a {
+        text-decoration: none;
+    }
+</style>
+
+<table class="table table-condensed table-hover">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Firstname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Lastname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(" ", "Details", new { id = item.Id }, htmlAttributes: new { @class = "glyphicon glyphicon-eye-open" })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Firstname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td style="white-space: nowrap;">
+                @Html.ActionLink(" ", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "glyphicon glyphicon-edit" }) |
+                @Ajax.ActionLink(" ", "Delete", new { item.Id }, new AjaxOptions()
+                {
+                    UpdateTargetId = "personList"
+                }, htmlAttributes: new { @class = "glyphicon glyphicon-trash" })
+            </td>
+        </tr>
+    }
+
+</table>

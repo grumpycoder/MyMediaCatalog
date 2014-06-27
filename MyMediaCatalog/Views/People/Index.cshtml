@@ -3,43 +3,21 @@
 @{
     ViewBag.Title = "People";
 }
-
-<h2>Index</h2>
+<style>
+    .table-hover {
+        cursor: pointer;
+    }
+    .table-hover a {
+        text-decoration: none;
+    }
+</style>
+<h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Firstname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lastname)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Firstname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lastname)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+<div id="personList">
+    @Html.Partial("_PersonList", Model)
+</div>
 
-</table>

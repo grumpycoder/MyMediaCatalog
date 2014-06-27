@@ -1,14 +1,21 @@
 ﻿@model IEnumerable<MyMediaCatalog.Domain.StaffMember>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "People";
 }
+<style>
+    .table-hover {
+        cursor: pointer;
+    }
+</style>
+<h2>@ViewBag.Title</h2>
 
-<h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
 </p>
+
+
 <table class="table">
     <tr>
         <th>

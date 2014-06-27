@@ -111,7 +111,13 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_CreateMedia", media);
         }
 
+        public ActionResult AddMediaPerson(int personId)
+        {
+            ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
+            ViewBag.MediaId = new SelectList(db.Media, "Id", "Title");
 
+            return View("Create");
+        }
 
         protected override void Dispose(bool disposing)
         {

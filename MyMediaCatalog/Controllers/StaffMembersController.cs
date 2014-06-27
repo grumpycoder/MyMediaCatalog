@@ -71,6 +71,19 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_StaffMembers", list);
         }
 
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var staff = db.StaffMembers.Find(id);
+            if (staff == null)
+            {
+                return HttpNotFound();
+            }
+            return View(staff);
+        }
 
 
 
@@ -93,20 +106,6 @@ namespace MyMediaCatalog.Controllers
             return View(staff.ToList());
         }
 
-        // GET: StaffMembers/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var mediaStaffMember = db.StaffMembers.Find(id);
-            if (mediaStaffMember == null)
-            {
-                return HttpNotFound();
-            }
-            return View(mediaStaffMember);
-        }
 
         // GET: StaffMembers/Create
         public ActionResult Create()
@@ -173,14 +172,14 @@ namespace MyMediaCatalog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            StaffMember mediaStaffMember = db.StaffMembers.Find(id);
-            if (mediaStaffMember == null)
+            StaffMember staffMember = db.StaffMembers.Find(id);
+            if (staffMember == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MediaId = new SelectList(db.Media, "Id", "Title", mediaStaffMember.MediaId);
-            ViewBag.StaffMemberId = new SelectList(db.StaffMembers, "Id", "Id", mediaStaffMember.Id);
-            return View(mediaStaffMember);
+            ViewBag.MediaId = new SelectList(db.Media, "Id", "Title", staffMember.MediaId);
+            ViewBag.StaffMemberId = new SelectList(db.StaffMembers, "Id", "Id", staffMember.Id);
+            return View(staffMember);
         }
 
         // POST: StaffMembers/Edit/5
@@ -188,7 +187,7 @@ namespace MyMediaCatalog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,StaffMemberId,MediaId")] StaffMember mediaStaffMember)
+        public ActionResult Edit([Bind(Include = "Id,StaffMemberId,Firstname,Lastname,Title")] StaffMember mediaStaffMember)
         {
             if (ModelState.IsValid)
             {
