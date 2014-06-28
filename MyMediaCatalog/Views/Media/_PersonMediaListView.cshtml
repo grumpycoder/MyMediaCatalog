@@ -1,0 +1,31 @@
+﻿@model IEnumerable<MyMediaCatalog.Domain.StaffMember>
+
+<ul class="list-group">
+    @if (!Model.Any())
+    {
+        <li class="list-group-item">
+            No Media
+        </li>
+    }
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div>
+                @Html.DisplayName(item.Role.Name)
+            </div>
+            <div>
+                @Html.ActionLink(item.Media.Title, "Details", "Media", new { id = @item.Id }, null)
+                <span class="pull-right">
+                    @Ajax.ActionLink(" ", "DeletePersonMedia", "Media", new { item.Id }, new AjaxOptions()
+                    {
+                        UpdateTargetId = "mediaListView"
+                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
+                </span>
+            </div>
+
+        </li>
+    }
+</ul>
+
+
+

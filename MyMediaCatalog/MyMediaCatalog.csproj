@@ -288,6 +288,7 @@
     <Content Include="Views\Media\_MediaListView.cshtml" />
     <Content Include="Views\People\_PersonList.cshtml" />
     <Content Include="Views\Media\_AddPersonMedia.cshtml" />
+    <Content Include="Views\Media\_PersonMediaListView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
