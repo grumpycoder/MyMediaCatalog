@@ -101,7 +101,7 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_MediaListView", list);
         }
 
-        public ActionResult CreateNewMedia(int companyId)
+        public ActionResult CreateNewMedia(int? companyId, int? personId)
         {
             var media = new Media()
             {
@@ -111,12 +111,48 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_CreateMedia", media);
         }
 
-        public ActionResult AddMediaPerson(int personId)
+        public ActionResult AddPersonMedia(int? personId)
         {
             ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
             ViewBag.MediaId = new SelectList(db.Media, "Id", "Title");
 
-            return View("Create");
+            return PartialView("_AddPersonMedia");
+        }
+
+        [HttpPost]
+        public ActionResult AddPersonMedia([Bind(Include = "PersonId,MediaId,RoleId")] StaffMember staff)
+        {
+            if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+         
+            db.StaffMembers.Add(staff);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+            var list = db.StaffMembers.Where(x => x.PersonId == staff.PersonId).Include(m => m.Media).Include(r => r.Role);
+            return PartialView("_PersonMediaListView", list);
+        }
+
+        public ActionResult DeletePersonMedia(int id)
+        {
+            var mediaStaffMember = db.StaffMembers.Find(id);
+            if (mediaStaffMember == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            db.StaffMembers.Remove(mediaStaffMember);
+            db.SaveChanges();
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+            var list = db.StaffMembers.Where(x => x.PersonId == mediaStaffMember.PersonId).Include(m => m.Media).Include(r => r.Role);
+            return PartialView("_PersonMediaListView", list);
+        }
+
+
+
+        public ActionResult GetPersonMedia(int? personId)
+        {
+            var list = db.StaffMembers.Where(x => x.PersonId == personId).Include(m => m.Media).Include(r => r.Role);
+            return PartialView("_PersonMediaListView", list);
         }
 
         protected override void Dispose(bool disposing)

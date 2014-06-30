@@ -43,10 +43,10 @@
 <hr />
 <h4>Media</h4>
 <div class="well well-sm">
-    @Html.Action("CreateNewMedia", "Media", new { mediaId = Model.Id })
+    @Html.Action("AddPersonMedia", "Media", new { personId = Model.Id })
 </div>
 <div id="mediaListView" style="overflow-x: hidden; overflow-y: auto;">
-    @*@Html.Partial("../Media/_MediaListView")*@
+    @Html.Action("GetPersonMedia", "Media", new { personId = Model.Id })
 </div>
 
 <p>
