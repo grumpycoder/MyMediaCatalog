@@ -14,18 +14,7 @@ namespace MyMediaCatalog.Migrations
 
         protected override void Seed(Data.AppContext context)
         {
-            //  This method will be called after migrating to the latest version.
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
             context.MediaTypes.AddOrUpdate(x => x.Name,
                 new MediaType() { Name = "CD" },
                 new MediaType() { Name = "Book" },
@@ -74,6 +63,32 @@ namespace MyMediaCatalog.Migrations
                     MediaTypeId = 2,
                     ReceiptDate = DateTime.Now.Date
                 }
+                );
+
+            context.States.AddOrUpdate(x => x.Abbr,
+                new State(){ Abbr = "AL", Name = "Alabama" },
+                new State() { Abbr = "AZ", Name = "Arizona" },
+                new State() { Abbr = "CA", Name = "California" },
+                new State() { Abbr = "CO", Name = "Colorado" });
+
+            context.PhoneTypes.AddOrUpdate(x => x.Name,
+                new PhoneType() { Name = "Home" },
+                new PhoneType() { Name = "Office" },
+                new PhoneType() { Name = "Cell" },
+                new PhoneType() { Name = "Fax" }
+                );
+
+            context.AddressTypes.AddOrUpdate(a => a.Name,
+                new AddressType() { Name = "Home" },
+                new AddressType() { Name = "Office" },
+                new AddressType() { Name = "Shipping" }
+                );
+
+            context.Persons.AddOrUpdate(p => p.Lastname, 
+                new Person(){Firstname = "James", Lastname = "Butt"}, 
+                new Person(){Firstname = "Josephine", Lastname = "Darakjy"},
+                new Person(){Firstname = "Art", Lastname = "Venere"}, 
+                new Person(){Firstname = "Lenna", Lastname = "Paprocki"} 
                 );
 
         }

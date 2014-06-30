@@ -22,6 +22,11 @@ namespace MyMediaCatalog.Domain
         public bool? Active { get; set; }
 
         public DateTime? DateDeleted { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
+
+        public string CreatedUser { get; set; }
+        public string ModifiedUser { get; set; }
 
         [Required]
         [Display(Name = "Company")]

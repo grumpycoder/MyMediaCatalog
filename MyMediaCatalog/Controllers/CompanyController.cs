@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MyMediaCatalog.Data;
 using MyMediaCatalog.Domain;
+using MyMediaCatalog.Models;
 
 namespace MyMediaCatalog.Controllers
 {
@@ -41,7 +39,7 @@ namespace MyMediaCatalog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] Company company)
+        public ActionResult Create([Bind(Include = "Id,Name,Email,WebsiteUrl")] Company company)
         {
             if (ModelState.IsValid)
             {
@@ -53,7 +51,6 @@ namespace MyMediaCatalog.Controllers
             return View(company);
         }
 
-        // GET: Company/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -68,16 +65,13 @@ namespace MyMediaCatalog.Controllers
             return View(company);
         }
 
-        // POST: Company/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Company company)
+        public ActionResult Edit([Bind(Include = "Id,Name,Email,WebsiteUrl")] Company company)
         {
             if (ModelState.IsValid)
             {
-                
+
                 db.Entry(company).State = EntityState.Modified;
                 db.SaveChanges();
                 if (Request.IsAjaxRequest())
@@ -89,7 +83,6 @@ namespace MyMediaCatalog.Controllers
             return View(company);
         }
 
-        // GET: Company/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -104,7 +97,6 @@ namespace MyMediaCatalog.Controllers
             return View(company);
         }
 
-        // POST: Company/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -113,6 +105,98 @@ namespace MyMediaCatalog.Controllers
             db.Companies.Remove(company);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult CreatePhone(int companyId)
+        {
+            ViewBag.PhoneTypeId = new SelectList(db.PhoneTypes, "Id", "Name");
+            var phone = new CompanyPhoneViewModel() { CompanyId = companyId };
+
+            return PartialView("_CreateCompanyPhone", phone);
+        }
+
+        [HttpPost]
+        public ActionResult CreatePhone([Bind(Include = "CompanyId,PhoneTypeId,Number")] CompanyPhoneViewModel phone)
+        {
+            if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            //TODO: Automapper Here
+            var companyphone = new CompanyPhone()
+            {
+                PhoneTypeId = phone.PhoneTypeId,
+                CompanyId = phone.CompanyId,
+                Phone = new Phone()
+                {
+                    Number = phone.Number
+                }
+            };
+
+            db.CompanyPhones.Add(companyphone);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.CompanyPhones.Where(c => c.CompanyId == phone.CompanyId).Include(p => p.PhoneType);
+            return PartialView("_PhoneListView", list);
+        }
+
+        public ActionResult DeletePhone(int id)
+        {
+            var phone = db.CompanyPhones.Find(id);
+            db.CompanyPhones.Remove(phone);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.CompanyPhones.Where(c => c.CompanyId == phone.CompanyId);
+            return PartialView("_PhoneListView", list);
+
+        }
+
+        public ActionResult CreateAddress(int companyId)
+        {
+            ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
+            ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            var addr = new CompanyAddressViewModel() { CompanyId = companyId };
+
+            return PartialView("_CreateCompanyAddress");
+        }
+
+        [HttpPost]
+        public ActionResult CreateAddress([Bind(Include = "CompanyId,AddressTypeId,Street,Street2,City,StateId,PostalCode")] CompanyAddressViewModel address)
+        {
+            var companyAddress = new CompanyAddress()
+            {
+                CompanyId = address.CompanyId,
+                AddressTypeId = address.AddressTypeId,
+                Address = new Address()
+                {
+                    Street = address.Street,
+                    Street2 = address.Street2,
+                    City = address.City,
+                    StateId = address.StateId,
+                    PostalCode = address.PostalCode
+                }
+            };
+            db.CompanyAddresses.Add(companyAddress);
+            db.SaveChanges();
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.CompanyAddresses.Where(a => a.CompanyId == address.CompanyId).Include(x => x.AddressType).Include(x => x.Address.State);
+            return PartialView("_AddressListView", list);
+
+        }
+
+        public ActionResult DeleteAddress(int id)
+        {
+            var address = db.CompanyAddresses.Find(id);
+            db.CompanyAddresses.Remove(address);
+            db.SaveChanges();
+            
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.CompanyAddresses.Where(a => a.CompanyId == address.CompanyId).Include(x => x.AddressType).Include(x => x.Address.State);
+            return PartialView("_AddressListView", list);
         }
 
         protected override void Dispose(bool disposing)

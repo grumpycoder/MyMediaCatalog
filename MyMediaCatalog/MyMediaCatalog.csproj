@@ -177,17 +177,30 @@
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\StaffMembersController.cs" />
     <Compile Include="Data\AppContext.cs" />
+    <Compile Include="Domain\Address.cs" />
+    <Compile Include="Domain\AddressType.cs" />
     <Compile Include="Domain\Company.cs" />
+    <Compile Include="Domain\CompanyAddress.cs" />
+    <Compile Include="Domain\CompanyPhone.cs" />
     <Compile Include="Domain\Media.cs" />
     <Compile Include="Domain\MediaType.cs" />
     <Compile Include="Domain\Person.cs" />
+    <Compile Include="Domain\PersonAddress.cs" />
+    <Compile Include="Domain\PersonPhone.cs" />
+    <Compile Include="Domain\Phone.cs" />
+    <Compile Include="Domain\PhoneType.cs" />
     <Compile Include="Domain\Role.cs" />
     <Compile Include="Domain\StaffMember.cs" />
+    <Compile Include="Domain\State.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\PersonAddressViewModel.cs" />
+    <Compile Include="Models\CompanyAddressViewModel.cs" />
+    <Compile Include="Models\PersonPhoneViewModel.cs" />
+    <Compile Include="Models\CompanyPhoneViewModel.cs" />
     <Compile Include="Models\StaffMemberViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -289,6 +302,14 @@
     <Content Include="Views\People\_PersonList.cshtml" />
     <Content Include="Views\Media\_AddPersonMedia.cshtml" />
     <Content Include="Views\Media\_PersonMediaListView.cshtml" />
+    <Content Include="Views\Company\_PhoneListView.cshtml" />
+    <Content Include="Views\Company\_AddressListView.cshtml" />
+    <Content Include="Views\Company\_CreateCompanyPhone.cshtml" />
+    <Content Include="Views\Company\_CreateCompanyAddress.cshtml" />
+    <Content Include="Views\People\_AddressListView.cshtml" />
+    <Content Include="Views\People\_PhoneListView.cshtml" />
+    <Content Include="Views\People\_CreatePersonPhone.cshtml" />
+    <Content Include="Views\People\_CreatePersonAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -311,7 +332,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51488</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

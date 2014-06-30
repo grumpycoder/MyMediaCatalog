@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="MyMediaCatalog.Domain.Company">
-    <Position X="7.75" Y="0.75" Width="1.5" />
+    <Position X="2" Y="8" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACBAAABCAAAQAAAAAAAAQQABAAAAAAAAAEQAAAAAQ=</HashCode>
       <FileName>Domain\Company.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MyMediaCatalog.Domain.Media">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+    <Position X="1.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AASCAAAAAQAAAEgAAAAAAAAAAAQAAAAgAACABAAEAAA=</HashCode>
+      <HashCode>QAWCBAAABQIAAUgAAAAAAAQAAAQAAAAgAACEBAAEAAA=</HashCode>
       <FileName>Domain\Media.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -18,47 +18,63 @@
       <Property Name="MediaType" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="MyMediaCatalog.Domain.MediaStaffMember">
-    <Position X="4.75" Y="4.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
-      <FileName>Domain\MediaStaffMember.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Media" />
-      <Property Name="StaffMember" />
-    </ShowAsAssociation>
-  </Class>
   <Class Name="MyMediaCatalog.Domain.Person">
-    <Position X="1.75" Y="6" Width="1.5" />
+    <Position X="10.5" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACBEAABAAAAUAIAAAAAAQAAAAAAAAABAAEAAAAACA=</HashCode>
       <FileName>Domain\Person.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MyMediaCatalog.Domain.Role">
-    <Position X="7.75" Y="6.25" Width="1.5" />
+    <Position X="10.5" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Domain\Role.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MyMediaCatalog.Domain.StaffMember">
-    <Position X="4.75" Y="6.25" Width="1.5" />
+    <Position X="7.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIACAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AIACBAIABAAAAQAEEAAAAAQAAAAAAEAAAAAEAAAAAAQ=</HashCode>
       <FileName>Domain\StaffMember.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Role" />
       <Property Name="Person" />
+      <Property Name="Role" />
+      <Property Name="Media" />
     </ShowAsAssociation>
   </Class>
   <Class Name="MyMediaCatalog.Domain.MediaType">
-    <Position X="1.75" Y="0.75" Width="1.5" />
+    <Position X="1.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Domain\MediaType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyMediaCatalog.Domain.CompanyAddress">
+    <Position X="5.25" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QQACAAAAAAIAAAAAAAAAAAAAAAAAAAACAAAABAQAAAI=</HashCode>
+      <FileName>Domain\CompanyAddress.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Company" />
+      <Property Name="AddressType" />
+      <Property Name="Address" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MyMediaCatalog.Domain.AddressType">
+    <Position X="5.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\AddressType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyMediaCatalog.Domain.Address">
+    <Position X="5" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAQAAAAAAIIAAAAAAAAAoAAAAAAAIABAAAAAA=</HashCode>
+      <FileName>Domain\Address.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

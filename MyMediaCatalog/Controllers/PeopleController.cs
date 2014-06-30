@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MyMediaCatalog.Data;
 using MyMediaCatalog.Domain;
+using MyMediaCatalog.Models;
 
 namespace MyMediaCatalog.Controllers
 {
@@ -101,6 +102,98 @@ namespace MyMediaCatalog.Controllers
                 return PartialView("_PersonList", list);
             }
             return RedirectToAction("Index");
+        }
+        
+        public ActionResult CreatePhone(int personId)
+        {
+            ViewBag.PhoneTypeId = new SelectList(db.PhoneTypes, "Id", "Name");
+            var phone = new PersonPhoneViewModel() { PersonId = personId };
+
+            return PartialView("_CreatePersonPhone", phone);
+        }
+
+        [HttpPost]
+        public ActionResult CreatePhone([Bind(Include = "PersonId,PhoneTypeId,Number")] PersonPhoneViewModel phoneViewModel)
+        {
+            if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            //TODO: Automapper Here
+            var phone = new PersonPhone()
+            {
+                PhoneTypeId = phoneViewModel.PhoneTypeId,
+                PersonId = phoneViewModel.PersonId,
+                Phone = new Phone()
+                {
+                    Number = phoneViewModel.Number
+                }
+            };
+
+            db.PersonPhones.Add(phone);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.PersonPhones.Where(c => c.PersonId == phone.PersonId).Include(p => p.PhoneType);
+            return PartialView("_PhoneListView", list);
+        }
+
+        public ActionResult DeletePhone(int id)
+        {
+            var phone = db.PersonPhones.Find(id);
+            db.PersonPhones.Remove(phone);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.PersonPhones.Where(c => c.PersonId == phone.PersonId);
+            return PartialView("_PhoneListView", list);
+
+        }
+
+        public ActionResult CreateAddress(int personId)
+        {
+            ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
+            ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            var addr = new PersonAddressViewModel() { PersonId = personId };
+
+            return PartialView("_CreatePersonAddress");
+        }
+
+        [HttpPost]
+        public ActionResult CreateAddress([Bind(Include = "PersonId,AddressTypeId,Street,Street2,City,StateId,PostalCode")] PersonAddressViewModel addressViewModel)
+        {
+            var address = new PersonAddress()
+            {
+                PersonId = addressViewModel.PersonId,
+                AddressTypeId = addressViewModel.AddressTypeId,
+                Address = new Address()
+                {
+                    Street = addressViewModel.Street,
+                    Street2 = addressViewModel.Street2,
+                    City = addressViewModel.City,
+                    StateId = addressViewModel.StateId,
+                    PostalCode = addressViewModel.PostalCode
+                }
+            };
+            db.PersonAddresses.Add(address);
+            db.SaveChanges();
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.PersonAddresses.Where(a => a.PersonId == address.PersonId).Include(x => x.AddressType).Include(x => x.Address.State);
+            return PartialView("_AddressListView", list);
+
+        }
+
+        public ActionResult DeleteAddress(int id)
+        {
+            var address = db.PersonAddresses.Find(id);
+            db.PersonAddresses.Remove(address);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+            var list = db.PersonAddresses.Where(a => a.PersonId == address.PersonId).Include(x => x.AddressType).Include(x => x.Address.State);
+            return PartialView("_AddressListView", list);
         }
 
         protected override void Dispose(bool disposing)

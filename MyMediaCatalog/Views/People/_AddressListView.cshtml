@@ -1,0 +1,31 @@
+﻿@model IEnumerable<MyMediaCatalog.Domain.PersonAddress>
+           
+<ul class="list-group">
+    @if (!Model.Any())
+    {
+        <li class="list-group-item">
+            No Addresses
+        </li>
+    }
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div>
+                @Html.DisplayName(item.AddressType.Name)
+            </div>
+            <div>
+                @item.Address.Street <br />
+                @item.Address.Street2 <br />
+                @item.Address.City @item.Address.State.Abbr @item.Address.PostalCode
+                <span class="pull-right">
+                    @Ajax.ActionLink(" ", "DeleteAddress", "People", new { item.Id }, new AjaxOptions()
+                    {
+                        UpdateTargetId = "addressListView"
+                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
+                </span>
+            </div>
+
+        </li>
+    }
+</ul>
+

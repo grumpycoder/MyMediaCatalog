@@ -36,10 +36,29 @@
 
     </dl>
 </div>
-<br/>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
 </p>
+<hr />
+<div class="row">
+    <h4>Phones</h4>
+    <div class="well well-sm">
+        @Html.Action("CreatePhone", "People", new { @personId = Model.Id })
+    </div>
+    <div id="phoneListView">
+        @Html.Partial("_PhoneListView", Model.PersonPhones)
+    </div>
+</div>
+
+<div class="row">
+    <h4>Addresses</h4>
+    <div class="well well-sm">
+        @Html.Action("CreateAddress", "People", new { @personId = Model.Id })
+    </div>
+    <div id="addressListView">
+        @Html.Partial("_AddressListView", Model.PersonAddresses)
+    </div>
+</div>
 <hr />
 <h4>Media</h4>
 <div class="well well-sm">
@@ -51,6 +70,6 @@
 
 <p>
     @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
-    
+
 </p>
 
