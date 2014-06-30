@@ -1,0 +1,30 @@
+﻿@model IEnumerable<MyMediaCatalog.Domain.Media>
+
+<ul class="list-group">
+    @if (!Model.Any())
+    {
+        <li class="list-group-item">
+            No Media
+        </li>
+    }
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div>
+                @Html.DisplayName(item.MediaType.Name)
+            </div>
+            <div>
+                @Html.ActionLink(item.Title, "Details", "Media", new { id = @item.Id }, null) 
+                <span class="pull-right">
+                    @Ajax.ActionLink(" ", "Delete", "Media", new { item.Id }, new AjaxOptions()
+                    {
+                        UpdateTargetId = "mediaListView"
+                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
+                </span>
+            </div>
+
+        </li>
+    }
+</ul>
+
+
