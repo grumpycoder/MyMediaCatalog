@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using MyMediaCatalog.Data;
 using MyMediaCatalog.Domain;
 using MyMediaCatalog.Models;
@@ -30,20 +31,35 @@ namespace MyMediaCatalog.Controllers
         public ActionResult CreateStaffMember([Bind(Include = "PersonId,RoleId,MediaId,Name,Title")] StaffMemberViewModel model)
         {
             if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var staff = new StaffMember()
-            {
-                Person = new Person()
-                {
-                    Firstname = model.Name.Split(new[] { ' ', '\t' }, StringSplitOptions.None)[0],
-                    Lastname = model.Name.Split(new[] { ' ', '\t' }, StringSplitOptions.None)[1],
-                    Title = model.Title
-                },
-                RoleId = model.RoleId,
-                MediaId = model.MediaId
-            };
 
-            db.StaffMembers.Add(staff);
-            db.SaveChanges();
+            if (model.PersonId.IsInt())
+            {
+                var staff = new StaffMember()
+                {
+                    PersonId = Convert.ToInt32(model.PersonId),
+                    RoleId = model.RoleId,
+                    MediaId = model.MediaId
+                };
+                db.StaffMembers.Add(staff);
+                db.SaveChanges();
+            }
+            else
+            {
+                var staff = new StaffMember()
+                {
+                    Person = new Person()
+                    {
+                        Firstname = model.PersonId.Split(new[] {' ', '\t'}, StringSplitOptions.None)[0],
+                        Lastname = model.PersonId.Split(new[] { ' ', '\t' }, StringSplitOptions.None)[1],
+                        Title = model.Title
+                    },
+                    RoleId = model.RoleId,
+                    MediaId = model.MediaId
+                };
+
+                db.StaffMembers.Add(staff);
+                db.SaveChanges();
+            }
 
             if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
             var list =
@@ -86,7 +102,7 @@ namespace MyMediaCatalog.Controllers
         }
 
 
-        
+
 
 
 

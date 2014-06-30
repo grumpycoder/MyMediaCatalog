@@ -9,8 +9,7 @@ namespace MyMediaCatalog.Models
 {
     public class StaffMemberViewModel
     {
-        public int PersonId { get; set; }
-        [Required]
+        public string PersonId { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
         [Required]

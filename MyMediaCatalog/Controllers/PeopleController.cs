@@ -196,6 +196,14 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_AddressListView", list);
         }
 
+        public ActionResult GetPersonList(string term)
+        {
+            if(term == null) term = Request.Params["filter[filters][0][value]"];
+
+            var list = db.Persons.Where(x => x.Lastname.Contains(term) || x.Firstname.Contains(term));
+            return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

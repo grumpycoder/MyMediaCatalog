@@ -13,9 +13,7 @@
             <dt>
                 @Html.DisplayNameFor(model => model.Company.Name)
             </dt>
-
             <dd>
-                @*@Html.DisplayFor(model => model.Company.Name)*@
                 @Html.ActionLink(Model.Company.Name, "Details", "Company", new { id = Model.CompanyId }, null)
             </dd>
 
@@ -105,3 +103,12 @@
 <p>
     @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
 </p>
+
+
+<script type="text/javascript">
+    function onSuccess() {
+        $('form select').val(null);
+        $('form input[type="text"]').val(null);
+    }
+
+</script>
