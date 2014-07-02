@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyMediaCatalog.Domain
 {
-    public class Media
+    public class Media : SoftDelete
     {
         public int Id { get; set; }
         [Required]
@@ -15,18 +15,14 @@ namespace MyMediaCatalog.Domain
 
         [Display(Name = "Receipt")]
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [UIHint("Date")]
         public DateTime? ReceiptDate { get; set; }
         public bool? Review { get; set; }
         public bool? Purchased { get; set; }
         public bool? Donate { get; set; }
         public bool? Active { get; set; }
 
-        public DateTime? DateDeleted { get; set; }
-        public DateTime? DateCreated { get; set; }
-        public DateTime? DateModified { get; set; }
 
-        public string CreatedUser { get; set; }
-        public string ModifiedUser { get; set; }
 
         [Required]
         [Display(Name = "Company")]
@@ -42,5 +38,13 @@ namespace MyMediaCatalog.Domain
 
         public virtual ICollection<StaffMember> StaffMembers { get; set; }
 
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DateModified { get; set; }
+        public string CreatedUser { get; set; }
+        public string ModifiedUser { get; set; }
+
+        //public bool IsDeleted { get; set; }
+        //public DateTime? DateDeleted { get; set; }
+        //public string DeletedUser { get; set; }
     }
 }

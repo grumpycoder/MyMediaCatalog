@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
 using MyMediaCatalog.Domain;
 
 namespace MyMediaCatalog.Data
@@ -30,6 +33,24 @@ namespace MyMediaCatalog.Data
         {
             //modelBuilder.Entity<MediaStaffMember>().HasRequired(x => x.StaffMember).WithRequiredDependent().WillCascadeOnDelete(true);
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+            var ctx = ((IObjectContextAdapter) this).ObjectContext;
+
+            //ctx.ObjectStateManager.GetObjectStateEntries(EntityState.Deleted).ToList();
+
+            foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted && e.Entity is SoftDelete))
+            {
+                entry.State = EntityState.Unchanged;
+                ((SoftDelete) entry.Entity).DateDeleted = DateTime.Now;
+                ((SoftDelete) entry.Entity).IsDeleted = true;
+                ((SoftDelete) entry.Entity).DeletedUser = Environment.UserName;
+            }
+
+            return base.SaveChanges();
+
         }
     }
 }

@@ -9,43 +9,43 @@
 
 <div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+    <div class="row">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Firstname)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Firstname)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Firstname)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Lastname)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Firstname)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Lastname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Lastname)
-        </dd>
-
-    </dl>
+        </dl>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
 </p>
 <hr />
+
 <div class="row">
     <h4>Phones</h4>
     <div class="well well-sm">
         @Html.Action("CreatePhone", "People", new { @personId = Model.Id })
     </div>
-    <div id="phoneListView">
+    <div id="phoneListView" class="col-md-6">
         @Html.Partial("_PhoneListView", Model.PersonPhones)
     </div>
 </div>
@@ -55,21 +55,24 @@
     <div class="well well-sm">
         @Html.Action("CreateAddress", "People", new { @personId = Model.Id })
     </div>
-    <div id="addressListView">
+    <div id="addressListView" class="col-md-6">
         @Html.Partial("_AddressListView", Model.PersonAddresses)
     </div>
 </div>
 <hr />
-<h4>Media</h4>
-<div class="well well-sm">
-    @Html.Action("AddPersonMedia", "Media", new { personId = Model.Id })
-</div>
-<div id="mediaListView" style="overflow-x: hidden; overflow-y: auto;">
-    @Html.Action("GetPersonMedia", "Media", new { personId = Model.Id })
+
+<div class="row">
+    <h4>Media</h4>
+    <div class="well well-sm">
+        @Html.Action("CreatePersonMedia", "Media", new { personId = Model.Id })
+    </div>
+    <div id="mediaListView" class="col-md-6" style="overflow-x: hidden; overflow-y: auto;">
+        @Html.Action("GetPersonMedia", "Media", new { personId = Model.Id })
+    </div>
 </div>
 
 <p>
-    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
 
 </p>
 

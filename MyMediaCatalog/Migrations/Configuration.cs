@@ -1,6 +1,5 @@
 using System;
 using System.Data.Entity.Migrations;
-using Antlr.Runtime.Tree;
 using MyMediaCatalog.Domain;
 
 namespace MyMediaCatalog.Migrations

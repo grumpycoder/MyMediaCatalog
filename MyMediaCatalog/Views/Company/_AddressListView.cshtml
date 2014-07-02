@@ -18,10 +18,10 @@
                 @item.Address.Street2 <br />
                 @item.Address.City @item.Address.State.Abbr @item.Address.PostalCode
                 <span class="pull-right">
-                    @Ajax.ActionLink(" ", "DeleteAddress", "Company", new { item.Id }, new AjaxOptions()
+                    @Ajax.ActionLink(" ", "DeleteAddress", "Company", new { item.Id }, new AjaxOptions
                     {
                         UpdateTargetId = "addressListView"
-                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
+                    }, new { @class = "glyphicon glyphicon-remove" })
                 </span>
             </div>
 

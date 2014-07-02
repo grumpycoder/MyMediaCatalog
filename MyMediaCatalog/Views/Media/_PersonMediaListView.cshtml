@@ -16,10 +16,10 @@
             <div>
                 @Html.ActionLink(item.Media.Title, "Details", "Media", new { id = @item.MediaId }, null)
                 <span class="pull-right">
-                    @Ajax.ActionLink(" ", "DeletePersonMedia", "Media", new { item.Id }, new AjaxOptions()
+                    @Ajax.ActionLink(" ", "DeletePersonMedia", "Media", new { item.Id }, new AjaxOptions
                     {
                         UpdateTargetId = "mediaListView"
-                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
+                    }, new { @class = "glyphicon glyphicon-remove" })
                 </span>
             </div>
 

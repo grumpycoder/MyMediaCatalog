@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -47,13 +49,20 @@ namespace MyMediaCatalog.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await UserManager.FindAsync(model.Email, model.Password);
-                if (user != null)
+                if (Membership.ValidateUser(model.UserName, model.Password))
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                    if (!String.IsNullOrEmpty(returnUrl))
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+                    return RedirectToAction("Index", "Home");
+
                 }
-                ModelState.AddModelError("", "Invalid username or password.");
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -419,7 +428,8 @@ namespace MyMediaCatalog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut();
+            //AuthenticationManager.SignOut();
+            FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
 

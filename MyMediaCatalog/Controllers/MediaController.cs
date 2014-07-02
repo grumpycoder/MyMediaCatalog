@@ -8,13 +8,14 @@ using MyMediaCatalog.Domain;
 
 namespace MyMediaCatalog.Controllers
 {
+    [Authorize]
     public class MediaController : Controller
     {
         private readonly AppContext db = new AppContext();
 
         public ActionResult Index()
         {
-            var media = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType);
+            var media = db.Media.Where(m => m.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType);
             return View(media.ToList());
         }
 
@@ -40,20 +41,24 @@ namespace MyMediaCatalog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Title,ISBN,Summary,ReceiptDate,Review,Purchased,Donate,Active,CompanyId,MediaTypeId")] Media media)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Media.Add(media);
-                db.SaveChanges();
-
-                if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
-
-                var list = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType);
-                return PartialView("_MediaListView", list);
+                ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", media.CompanyId);
+                ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name", media.MediaTypeId);
+                return View(media);
             }
 
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", media.CompanyId);
-            ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name", media.MediaTypeId);
-            return View(media);
+            media.DateCreated = DateTime.Now;
+            media.DateModified = DateTime.Now;
+            media.CreatedUser = User.Identity.Name;
+            media.ModifiedUser = User.Identity.Name;
+            db.Media.Add(media);
+            db.SaveChanges();
+
+            if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
+
+            var list = db.Media.Where(x => x.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType);
+            return PartialView("_MediaListView", list);
         }
 
         public ActionResult Edit(int? id)
@@ -62,7 +67,7 @@ namespace MyMediaCatalog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Media media = db.Media.Find(id);
+            var media = db.Media.Find(id);
             if (media == null)
             {
                 return HttpNotFound();
@@ -78,6 +83,8 @@ namespace MyMediaCatalog.Controllers
         {
             if (ModelState.IsValid)
             {
+                media.DateModified = DateTime.Now;
+                media.ModifiedUser = User.Identity.Name;
                 db.Entry(media).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -86,24 +93,30 @@ namespace MyMediaCatalog.Controllers
             ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name", media.MediaTypeId);
             return View(media);
         }
-        
+
+        [HttpPost]
         public ActionResult Delete(int id)
         {
             var media = db.Media.Find(id);
-            media.DateDeleted = DateTime.Now.Date;
-            //db.Media.Remove(media);
-            //db.Media.Attach(media);
+            if (media == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            //TODO: Change media delete to use remove context function
+            media.DateDeleted = DateTime.Now;
+            media.IsDeleted = true;
+            media.DeletedUser = User.Identity.Name;
             db.SaveChanges();
 
             if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
 
-            var list = db.Media.Where(m => m.DateDeleted == null).Include(m => m.Company).Include(m => m.MediaType).ToList();
-            return PartialView("_MediaListView", list);
+            var list = db.Media.Where(x => x.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType).ToList();
+            return PartialView("_MediaList", list);
         }
 
-        public ActionResult CreateNewMedia(int? companyId, int? personId)
+        public ActionResult CreateCompanyMedia(int? companyId)
         {
-            var media = new Media()
+            var media = new Media
             {
                 CompanyId = companyId
             };
@@ -111,24 +124,30 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_CreateMedia", media);
         }
 
-        public ActionResult AddPersonMedia(int? personId)
+        public ActionResult CreatePersonMedia()
         {
             ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
-            ViewBag.MediaId = new SelectList(db.Media, "Id", "Title");
+            ViewBag.MediaId = new SelectList(db.Media.Where(x => x.IsDeleted == false), "Id", "Title");
 
             return PartialView("_AddPersonMedia");
         }
 
         [HttpPost]
-        public ActionResult AddPersonMedia([Bind(Include = "PersonId,MediaId,RoleId")] StaffMember staff)
+        public ActionResult CreatePersonMedia([Bind(Include = "PersonId,MediaId,RoleId")] StaffMember staff)
         {
             if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-         
+
+            staff.DateCreated = DateTime.Now;
+            staff.DateModified = DateTime.Now;
+            staff.CreatedUser = User.Identity.Name;
+            staff.ModifiedUser = User.Identity.Name;
+
             db.StaffMembers.Add(staff);
             db.SaveChanges();
 
             if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
-            var list = db.StaffMembers.Where(x => x.PersonId == staff.PersonId).Include(m => m.Media).Include(r => r.Role);
+
+            var list = db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.PersonId == staff.PersonId).Include(m => m.Media).Include(r => r.Role);
             return PartialView("_PersonMediaListView", list);
         }
 
@@ -143,18 +162,43 @@ namespace MyMediaCatalog.Controllers
             db.StaffMembers.Remove(mediaStaffMember);
             db.SaveChanges();
             if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
-            var list = db.StaffMembers.Where(x => x.PersonId == mediaStaffMember.PersonId).Include(m => m.Media).Include(r => r.Role);
+
+            var list = db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.PersonId == mediaStaffMember.PersonId).Include(m => m.Media).Include(r => r.Role);
             return PartialView("_PersonMediaListView", list);
         }
-
-
 
         public ActionResult GetPersonMedia(int? personId)
         {
-            var list = db.StaffMembers.Where(x => x.PersonId == personId).Include(m => m.Media).Include(r => r.Role);
+            var list = db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.PersonId == personId).Include(m => m.Media).Include(r => r.Role);
             return PartialView("_PersonMediaListView", list);
         }
 
+        public ActionResult GetMediaList(string term)
+        {
+            if (term == null) term = Request.Params["filter[filters][0][value]"];
+            //TODO: Code Smell. Need refactor if..else statement
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                var list = db.Media.Where(x => x.IsDeleted == false).Select(x => new
+                {
+                    x.Id,
+                    x.Title,
+                    Company = x.Company.Name
+                });
+                return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var list = db.Media.Where(x => x.IsDeleted == false).Select(x => new
+                {
+                    x.Id,
+                    x.Title,
+                    Company = x.Company.Name
+                });
+                return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
+            }
+        }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

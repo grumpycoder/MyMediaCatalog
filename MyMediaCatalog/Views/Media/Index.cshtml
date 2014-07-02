@@ -8,12 +8,13 @@
         cursor: pointer;
     }
 </style>
+
 <h2>@ViewBag.Title</h2>
 <p>
     @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
 </p>
 
-<div id="mediaList">
+<div id="mediaListView">
     @Html.Partial("_MediaList", Model)
 </div>
 

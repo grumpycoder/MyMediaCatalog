@@ -5,10 +5,9 @@
 }
 
 <h2>@Model.Title</h2>
-
 <div>
     <hr />
-
+    <div class="row">
         <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => model.Company.Name)
@@ -82,26 +81,25 @@
             </dd>
 
         </dl>
-
-    <br />
+    </div>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
     </p>
     <hr />
-    <h4>Staff</h4>
-    <div class="well well-sm">
-        @Html.Action("CreateNewStaffMember", "StaffMembers", new { mediaId = Model.Id })
+
+    <div class="row">
+        <h4>Staff</h4>
+        <div class="well well-sm">
+            @Html.Action("CreateNewStaffMember", "People", new { mediaId = Model.Id })
+        </div>
+        <div id="staffListView" style="overflow-x: hidden; overflow-y: auto;" class="col-md-6">
+            @Html.Partial("../People/_StaffMembers", Model.StaffMembers)
+        </div>
     </div>
-    <div id="staffList" style="overflow-x: hidden; overflow-y: auto;">
-        @Html.Partial("../StaffMembers/_StaffMembers", Model.StaffMembers)
-    </div>
+
 </div>
-
-
-
-
 <p>
-    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", "Media", null, new { @class = "btn btn-default" })
 </p>
 
 

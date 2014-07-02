@@ -16,10 +16,10 @@
             <div>
                 @item.Phone.Number
                 <span class="pull-right">
-                    @Ajax.ActionLink(" ", "DeletePhone", "Company", new { item.Id }, new AjaxOptions()
+                    @Ajax.ActionLink(" ", "DeletePhone", "Company", new { item.Id }, new AjaxOptions
                     {
                         UpdateTargetId = "phoneListView"
-                    }, htmlAttributes: new { @class = "glyphicon glyphicon-remove" })
+                    }, new { @class = "glyphicon glyphicon-remove" })
                 </span>
             </div>
 

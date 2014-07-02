@@ -15,10 +15,10 @@
     <AssemblyName>MyMediaCatalog</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -179,13 +179,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
-    <Compile Include="Controllers\StaffMembersController.cs" />
     <Compile Include="Data\AppContext.cs" />
     <Compile Include="Domain\Address.cs" />
     <Compile Include="Domain\AddressType.cs" />
+    <Compile Include="Domain\Audit.cs" />
     <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\CompanyAddress.cs" />
     <Compile Include="Domain\CompanyPhone.cs" />
+    <Compile Include="Domain\SoftDelete.cs" />
     <Compile Include="Domain\Media.cs" />
     <Compile Include="Domain\MediaType.cs" />
     <Compile Include="Domain\Person.cs" />
@@ -227,7 +228,10 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Domain\ClassDiagram1.cd" />
+    <None Include="Properties\PublishProfiles\Dev.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\tt.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
@@ -247,7 +251,18 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Views\Shared\DisplayTemplates\String.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\Date.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -286,11 +301,6 @@
     <Content Include="Views\Media\Details.cshtml" />
     <Content Include="Views\Media\Edit.cshtml" />
     <Content Include="Views\Media\Index.cshtml" />
-    <Content Include="Views\StaffMembers\Create.cshtml" />
-    <Content Include="Views\StaffMembers\Delete.cshtml" />
-    <Content Include="Views\StaffMembers\Details.cshtml" />
-    <Content Include="Views\StaffMembers\Edit.cshtml" />
-    <Content Include="Views\StaffMembers\Index.cshtml" />
     <Content Include="Views\People\Create.cshtml" />
     <Content Include="Views\People\Delete.cshtml" />
     <Content Include="Views\People\Details.cshtml" />
@@ -298,10 +308,8 @@
     <Content Include="Views\People\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
-    <Content Include="Views\StaffMembers\_CreateStaffMember.cshtml" />
-    <Content Include="Views\StaffMembers\_StaffMembers.cshtml" />
     <Content Include="Views\Media\_MediaList.cshtml" />
-    <Content Include="Views\Company\_CompanyList.cshtml" />
+    <Content Include="Views\Company\_CompanyListView.cshtml" />
     <Content Include="Views\Media\_CreateMedia.cshtml" />
     <Content Include="Views\Media\_MediaListView.cshtml" />
     <Content Include="Views\People\_PersonList.cshtml" />
@@ -316,8 +324,6 @@
     <Content Include="Views\People\_CreatePersonPhone.cshtml" />
     <Content Include="Views\People\_CreatePersonAddress.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Currency.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Email.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GridForeignKey.cshtml" />
@@ -327,9 +333,13 @@
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Url.cshtml" />
+    <Content Include="Views\People\_CreateStaffMember.cshtml" />
+    <Content Include="Views\People\_StaffMembers.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -349,11 +359,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51488</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51488/</IISUrl>
+          <IISUrl>http://localhost/MyMediaCatalog</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

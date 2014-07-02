@@ -31,7 +31,7 @@
         </dl>
     </div>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary" })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
     </p>
     <hr />
     <div class="row">
@@ -39,7 +39,7 @@
         <div class="well well-sm">
             @Html.Action("CreatePhone", "Company", new { @companyId = Model.Id })
         </div>
-        <div id="phoneListView">
+        <div id="phoneListView" class="col-md-6">
             @Html.Partial("_PhoneListView", Model.CompanyPhones)
         </div>
     </div>
@@ -49,23 +49,25 @@
         <div class="well well-sm">
             @Html.Action("CreateAddress", "Company", new { @companyId = Model.Id })
         </div>
-        <div id="addressListView">
+        <div id="addressListView" class="col-md-6">
             @Html.Partial("_AddressListView", Model.CompanyAddresses)
         </div>
     </div>
-
     <hr />
-    <h4>Media</h4>
-    <div class="well well-sm">
-        @Html.Action("CreateNewMedia", "Media", new { @companyId = Model.Id })
-    </div>
-    <div id="mediaListView" style="overflow-x: hidden; overflow-y: auto;">
-        @Html.Partial("../Media/_MediaListView", Model.Media)
+
+    <div class="row">
+        <h4>Media</h4>
+        <div class="well well-sm">
+            @Html.Action("CreateCompanyMedia", "Media", new { @companyId = Model.Id })
+        </div>
+        <div id="mediaListView" class="col-md-6" style="overflow-x: hidden; overflow-y: auto;">
+            @Html.Partial("../Media/_MediaListView", Model.Media)
+        </div>
     </div>
 
 </div>
 <p>
-    @Html.ActionLink("Back to List", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
 </p>
 
 
