@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyMediaCatalog.Domain
+namespace MyMediaCatalog.Models
 {
-    public class Media : SoftDelete
+    public class MediaViewModel
     {
         public int Id { get; set; }
         [Required]
@@ -17,9 +16,11 @@ namespace MyMediaCatalog.Domain
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [UIHint("Date")]
         public DateTime? ReceiptDate { get; set; }
+        [UIHint("Boolean")]
         public bool? Review { get; set; }
         public bool? Purchased { get; set; }
         public bool? Donate { get; set; }
+        public bool? Active { get; set; }
 
         [Required]
         [Display(Name = "Company")]
@@ -29,19 +30,8 @@ namespace MyMediaCatalog.Domain
         public int? MediaTypeId { get; set; }
 
         [Display(Name = "Company")]
-        public virtual Company Company { get; set; }
+        public string CompanyName { get; set; }
         [Display(Name = "Media Type")]
-        public virtual MediaType MediaType { get; set; }
-
-        public virtual ICollection<StaffMember> StaffMembers { get; set; }
-
-        public DateTime? DateCreated { get; set; }
-        public DateTime? DateModified { get; set; }
-        public string CreatedUser { get; set; }
-        public string ModifiedUser { get; set; }
-
-        //public bool IsDeleted { get; set; }
-        //public DateTime? DateDeleted { get; set; }
-        //public string DeletedUser { get; set; }
+        public string MediaTypeName { get; set; }
     }
 }

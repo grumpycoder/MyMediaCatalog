@@ -1,23 +1,11 @@
-﻿@model IEnumerable<MyMediaCatalog.Domain.Person>
-
+﻿
 @{
     ViewBag.Title = "People";
 }
-<style>
-    .table-hover {
-        cursor: pointer;
-    }
-    .table-hover a {
-        text-decoration: none;
-    }
-</style>
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
-</p>
 
 <div id="personList">
-    @Html.Partial("_PersonList", Model)
+    @Html.Partial("_PersonList")
 </div>
 

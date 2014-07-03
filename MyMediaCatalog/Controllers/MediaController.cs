@@ -3,8 +3,12 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using AutoMapper.QueryableExtensions;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using MyMediaCatalog.Data;
 using MyMediaCatalog.Domain;
+using MyMediaCatalog.Models;
 
 namespace MyMediaCatalog.Controllers
 {
@@ -18,6 +22,14 @@ namespace MyMediaCatalog.Controllers
             var media = db.Media.Where(m => m.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType);
             return View(media.ToList());
         }
+
+        public ActionResult GetGridMediaList([DataSourceRequest] DataSourceRequest request)
+        {
+
+            var media = db.Media.Where(m => m.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType).Project().To<MediaViewModel>();
+            return Json(media.ToDataSourceResult(request));
+        }
+
 
         public ActionResult Details(int? id)
         {

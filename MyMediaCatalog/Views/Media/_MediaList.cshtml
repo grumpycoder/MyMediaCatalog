@@ -1,84 +1,59 @@
-﻿@model IEnumerable<MyMediaCatalog.Domain.Media>
-
-<table class="table table-condensed table-hover">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MediaType.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ISBN)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Summary)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReceiptDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Review)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Purchased)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Donate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Active)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Company.Name)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Title, "Details", new { id = item.Id })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MediaType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Summary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReceiptDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Review)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Purchased)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Donate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company.Name)
-            </td>
-            <td style="white-space: nowrap;">
-                @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "glyphicon glyphicon-edit" }) |
-                @Ajax.ActionLink(" ", "Delete", "Media", new { item.Id }, new AjaxOptions
-                {
-                    HttpMethod = "POST",
-                    UpdateTargetId = "mediaListView"
-                }, new { @class = "glyphicon glyphicon-remove" })
-            </td>
-        </tr>
+﻿@using System.Web.UI.WebControls
+<style>
+    #cmdDelete {
+        white-space: nowrap;
     }
 
-</table>
+    .k-grid td {
+        vertical-align: top;
+    }
+</style>
+@(Html.Kendo().Grid<MediaViewModel>().Name("media-grid")
+      .Columns(c =>
+      {
+          c.Bound(m => m.Title);
+          c.Bound(m => m.ISBN);
+          c.Bound(m => m.ReceiptDate);
+          c.Bound(m => m.Review).ClientTemplate("#= Review ?  '<span class=\"glyphicon glyphicon-ok\"></span>' : '<span class=\"glyphicon glyphicon-remove\"></span>' #").HtmlAttributes(new { @style = "text-align: center;" });
+          c.Bound(m => m.Purchased).ClientTemplate("#= Purchased ?  '<span class=\"glyphicon glyphicon-ok\"></span>' : '<span class=\"glyphicon glyphicon-remove\"></span>' #").HtmlAttributes(new { @style = "text-align: center;" });
+          c.Bound(m => m.Donate).ClientTemplate("#= Donate ?  '<span class=\"glyphicon glyphicon-ok\"></span>' : '<span class=\"glyphicon glyphicon-remove\"></span>' #").HtmlAttributes(new { @style = "text-align: center;" });
+          c.Bound(m => m.CompanyName);
+          c.Bound(m => m.MediaTypeName);
+          c.Command(cmd =>
+              cmd.Destroy().HtmlAttributes(new { @id = "cmdDelete" })).Width(110);
+      })
+      .Pageable().Sortable().Filterable().Resizable(r => r.Columns(true)).Reorderable(o => o.Columns(true)).Selectable()
+      .Editable(e => e.Mode(GridEditMode.PopUp))
+      .DataSource(src => src.Ajax()
+          .PageSize(20)
+          .Batch(false)
+          .Read("GetGridMediaList", "Media")
+          .Model(m => m.Id(p => p.Id))
+          .Destroy(d => d.Action("Delete", "Media"))
+          )
+          .ToolBar(t =>
+          {
+              t.Custom().Text("Create New").Action("Create", "Media").HtmlAttributes(new { @class = "btn btn-default" });
+              t.Custom().Text("Clear Filter(s)").HtmlAttributes(new { id = "btnClearFilters" });
+          }
+      )
+)
 
 
+<script>
+
+    $('#btnClearFilters').on('click', function (e) {
+        e.preventDefault();
+        if ($("#media-grid").data("kendoGrid").dataSource.filter() !== null)
+            $("#media-grid").data("kendoGrid").dataSource.filter(null);
+    });
+
+
+    $("#media-grid").on("dblclick", "tr.k-state-selected", function () {
+        var grid = $("#media-grid").data("kendoGrid");
+        var id = grid.dataItem(grid.select()).Id;
+        location.href = kendo.format('@(Server.UrlDecode(Url.Action("Details", "Media", new { id = "{0}" })))', id);
+    });
+
+
+</script>

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using AutoMapper.QueryableExtensions;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using MyMediaCatalog.Data;
 using MyMediaCatalog.Domain;
 using MyMediaCatalog.Models;
@@ -18,6 +21,12 @@ namespace MyMediaCatalog.Controllers
         public ActionResult Index()
         {
             return View(db.Persons.Where(x => x.IsDeleted == false).ToList());
+        }
+
+        public ActionResult GetGridPersonList([DataSourceRequest] DataSourceRequest request)
+        {
+            var list = db.Persons.Where(x => x.IsDeleted == false).Project().To<PersonViewModel>();
+            return Json(list.ToDataSourceResult(request));
         }
 
         public ActionResult Details(int? id)

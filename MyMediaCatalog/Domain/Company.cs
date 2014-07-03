@@ -8,11 +8,12 @@ namespace MyMediaCatalog.Domain
     {
         public int Id { get; set; }
         [Display(Name = "Company")]
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "Website")]
         public string WebsiteUrl { get; set; }
-        [UIHint("Email")]
+        [UIHint("EmailAddress")]
         public string Email { get; set; }
         
         public virtual ICollection<Media> Media { get; set; }

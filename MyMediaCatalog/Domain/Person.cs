@@ -12,6 +12,10 @@ namespace MyMediaCatalog.Domain
         public string Firstname { get; set; }
         [Display(Name = "Last Name")]
         public string Lastname { get; set; }
+        [UIHint("EmailAddress")]
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
 
         public virtual ICollection<PersonPhone> PersonPhones { get; set; }
         public virtual ICollection<PersonAddress> PersonAddresses { get; set; }
