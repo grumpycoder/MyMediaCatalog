@@ -1,0 +1,73 @@
+﻿@model PersonAddressViewModel
+           
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+</div>
+
+@using (Html.BeginForm("CreateAddress", "People", FormMethod.Post, new { @class = "modal-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.PersonId)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="modal-body">
+         
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddressTypeId, "Type")
+            <div>
+                @(Html.Kendo().DropDownListFor(m => m.AddressTypeId).Name("AddressTypeId").Text("Name").Value("Id").BindTo(ViewBag.AddressTypeId).OptionLabel("-- Select Type --"))
+                @Html.ValidationMessageFor(model => model.AddressTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Street)
+            <div>
+                @Html.TextBoxFor(model => model.Street, new { @placeholder = "Street", @class="form-control" })
+                @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Street2)
+            <div>
+                @Html.TextBoxFor(model => model.Street2, new { @placeholder = "Street2", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Street2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.City)
+            <div>
+                @Html.TextBoxFor(model => model.City, new { @placeholder = "City", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateId, "State")
+            <div>
+                @(Html.Kendo().DropDownListFor(m => m.StateId).Name("StateId").Text("Abbr").Value("Id").BindTo(ViewBag.StateId).OptionLabel("-- Select State --"))
+                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostalCode)
+            <div>
+                @Html.TextBoxFor(model => model.PostalCode, new { @placeholder = "Postal Code", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+
+}

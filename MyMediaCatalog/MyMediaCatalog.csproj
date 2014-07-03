@@ -339,6 +339,7 @@
     <Content Include="Views\People\_CreateStaffMember.cshtml" />
     <Content Include="Views\People\_StaffMembers.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <Content Include="Views\People\_CreateAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

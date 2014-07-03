@@ -154,11 +154,21 @@ namespace MyMediaCatalog.Controllers
 
         }
 
-        public ActionResult CreateAddress()
+        public ActionResult GetPersonAddress(int id)
+        {
+            var list = db.PersonAddresses.Where(a => a.PersonId == id).Include(x => x.AddressType).Include(x => x.Address.State);
+            return PartialView("_AddressListView", list);
+        }
+
+        public ActionResult CreateAddress(int personId)
         {
             ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
             ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
-            return PartialView("_CreatePersonAddress");
+            var addr = new PersonAddressViewModel()
+            {
+               PersonId = personId
+            }; 
+            return PartialView("_CreateAddress", addr);
         }
 
         [HttpPost]
@@ -185,8 +195,9 @@ namespace MyMediaCatalog.Controllers
             db.SaveChanges();
             if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
 
-            var list = db.PersonAddresses.Where(a => a.PersonId == address.PersonId).Include(x => x.AddressType).Include(x => x.Address.State);
-            return PartialView("_AddressListView", list);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+            //var list = db.PersonAddresses.Where(a => a.PersonId == address.PersonId).Include(x => x.AddressType).Include(x => x.Address.State);
+            //return PartialView("_AddressListView", list);
 
         }
 
