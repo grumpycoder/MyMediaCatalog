@@ -174,28 +174,32 @@ namespace MyMediaCatalog.Controllers
         [HttpPost]
         public ActionResult CreateAddress([Bind(Include = "PersonId,AddressTypeId,Street,Street2,City,StateId,PostalCode")] PersonAddressViewModel addressViewModel)
         {
-            var address = new PersonAddress
+            if (ModelState.IsValid)
             {
-                PersonId = addressViewModel.PersonId,
-                AddressTypeId = addressViewModel.AddressTypeId,
-                Address = new Address
+                var address = new PersonAddress
                 {
-                    Street = addressViewModel.Street,
-                    Street2 = addressViewModel.Street2,
-                    City = addressViewModel.City,
-                    StateId = addressViewModel.StateId,
-                    PostalCode = addressViewModel.PostalCode,
-                    DateCreated = DateTime.Now,
-                    DateModified = DateTime.Now,
-                    CreatedUser = User.Identity.Name,
-                    ModifiedUser = User.Identity.Name
-                }
-            };
-            db.PersonAddresses.Add(address);
-            db.SaveChanges();
-            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
-
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
+                    PersonId = addressViewModel.PersonId,
+                    AddressTypeId = addressViewModel.AddressTypeId,
+                    Address = new Address
+                    {
+                        Street = addressViewModel.Street,
+                        Street2 = addressViewModel.Street2,
+                        City = addressViewModel.City,
+                        StateId = addressViewModel.StateId,
+                        PostalCode = addressViewModel.PostalCode,
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now,
+                        CreatedUser = User.Identity.Name,
+                        ModifiedUser = User.Identity.Name
+                    }
+                };
+                db.PersonAddresses.Add(address);
+                db.SaveChanges();
+                return Json(new {success = true});
+            }
+            ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
+            ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            return PartialView("_CreateAddress");
             //var list = db.PersonAddresses.Where(a => a.PersonId == address.PersonId).Include(x => x.AddressType).Include(x => x.Address.State);
             //return PartialView("_AddressListView", list);
 

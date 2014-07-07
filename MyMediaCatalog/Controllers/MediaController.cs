@@ -141,7 +141,7 @@ namespace MyMediaCatalog.Controllers
             ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
             ViewBag.MediaId = new SelectList(db.Media.Where(x => x.IsDeleted == false), "Id", "Title");
 
-            return PartialView("_AddPersonMedia");
+            return PartialView("_CreatePersonMedia");
         }
 
         [HttpPost]
