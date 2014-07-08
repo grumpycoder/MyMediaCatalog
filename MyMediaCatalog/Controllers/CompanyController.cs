@@ -107,7 +107,7 @@ namespace MyMediaCatalog.Controllers
         public ActionResult CreatePhone(int companyId)
         {
             ViewBag.PhoneTypeId = new SelectList(db.PhoneTypes, "Id", "Name");
-            var phone = new CompanyPhoneViewModel { CompanyId = companyId };
+            var phone = new CompanyPhoneViewModel() { CompanyId = companyId };
 
             return PartialView("_CreateCompanyPhone", phone);
         }
@@ -152,43 +152,53 @@ namespace MyMediaCatalog.Controllers
 
         }
 
-        public ActionResult CreateAddress()
+        public ActionResult CreateAddress(int companyId)
         {
             ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
             ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            ViewBag.CountryId = new SelectList(db.Countries, "Id", "Abbr");
+            ViewBag.CountryList = new SelectList(db.Countries, "Id", "Abbr", 252);
 
-            return PartialView("_CreateCompanyAddress");
+            var addr = new CompanyAddressViewModel()
+            {
+                CompanyId = companyId
+                //CountryId = db.Countries.FirstOrDefault(x => x.Abbr == "US").Id
+            };
+            return PartialView("_CreateAddress", addr);
         }
 
         [HttpPost]
-        public ActionResult CreateAddress([Bind(Include = "CompanyId,AddressTypeId,Street,Street2,City,StateId,PostalCode")] CompanyAddressViewModel address)
+        public ActionResult CreateAddress([Bind(Include = "CompanyId,AddressTypeId,Street,Street2,City,StateId,PostalCode,CountryId")] CompanyAddressViewModel addressViewModel)
         {
-            var companyAddress = new CompanyAddress
+            if (ModelState.IsValid)
             {
-                CompanyId = address.CompanyId,
-                AddressTypeId = address.AddressTypeId,
-                Address = new Address
+                var address = new CompanyAddress
                 {
-                    Street = address.Street,
-                    Street2 = address.Street2,
-                    City = address.City,
-                    StateId = address.StateId,
-                    PostalCode = address.PostalCode,
-                    DateCreated = DateTime.Now,
-                    DateModified = DateTime.Now,
-                    CreatedUser = User.Identity.Name,
-                    ModifiedUser = User.Identity.Name
+                    CompanyId = addressViewModel.CompanyId,
+                    AddressTypeId = addressViewModel.AddressTypeId,
+                    Address = new Address
+                    {
+                        Street = addressViewModel.Street,
+                        Street2 = addressViewModel.Street2,
+                        City = addressViewModel.City,
+                        StateId = addressViewModel.StateId,
+                        PostalCode = addressViewModel.PostalCode,
+                        CountryId = addressViewModel.CountryId, 
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now,
+                        CreatedUser = User.Identity.Name,
+                        ModifiedUser = User.Identity.Name
+                    }
+                };
+                db.CompanyAddresses.Add(address);
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+            ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
+            ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            ViewBag.CountryId = new SelectList(db.Countries, "Id", "Abbr");
 
-                }
-            };
-
-            db.CompanyAddresses.Add(companyAddress);
-            db.SaveChanges();
-
-            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
-
-            var list = db.CompanyAddresses.Where(a => a.CompanyId == address.CompanyId).Include(x => x.AddressType).Include(x => x.Address.State);
-            return PartialView("_AddressListView", list);
+            return PartialView("_CreateAddress");
 
         }
 
@@ -206,6 +216,28 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_AddressListView", list);
         }
 
+        public ActionResult GetCompanyAddress(int id)
+        {
+            var list = db.CompanyAddresses.Where(a => a.CompanyId == id).Include(x => x.AddressType).Include(x => x.Address.State);
+            return PartialView("_AddressListView", list);
+        }
+
+        public ActionResult GetCompanyList(string term)
+        {
+            if (term == null) term = Request.Params["filter[filters][0][value]"];
+            //TODO: Code Smell. Refactor If..Else statement
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                var list = db.Companies.Where(x => x.IsDeleted == false).Project().To<CompanyViewModel>();
+                return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var list = db.Companies.Where(x => x.IsDeleted == false).Where(x => x.Name.Contains(term)).Project().To<CompanyViewModel>();
+                return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
+            }
+        }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

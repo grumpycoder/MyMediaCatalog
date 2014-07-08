@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using MyMediaCatalog.Domain;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyMediaCatalog.Models
 {
@@ -16,5 +13,6 @@ namespace MyMediaCatalog.Models
 
         public string Email { get; set; }
 
+        public string FullName { get { return string.Format("{0} {1}", Firstname, Lastname); } }
     }
 }

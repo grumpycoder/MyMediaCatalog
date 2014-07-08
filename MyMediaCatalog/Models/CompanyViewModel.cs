@@ -15,6 +15,9 @@ namespace MyMediaCatalog.Models
         [UIHint("Email")]
         public string Email { get; set; }
 
+        public string City { get; set; }
+        public string State { get; set; }
+
         //public virtual ICollection<Media> Media { get; set; }
         //public virtual ICollection<CompanyPhone> CompanyPhones { get; set; }
         //public virtual ICollection<CompanyAddress> CompanyAddresses { get; set; }

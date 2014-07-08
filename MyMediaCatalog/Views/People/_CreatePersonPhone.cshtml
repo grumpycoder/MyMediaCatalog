@@ -1,36 +1,35 @@
 ﻿@model PersonPhoneViewModel
 
-    @using (Ajax.BeginForm("CreatePhone", "People", new AjaxOptions
+@using (Ajax.BeginForm("CreatePhone", "People", new AjaxOptions
 {
     HttpMethod = "POST",
-    OnFailure = "onFailure()",
     InsertionMode = InsertionMode.Replace,
     UpdateTargetId = "phoneListView",
     OnSuccess = "onSuccess"
 }, new { @class = "form-inline", id = "createPhone" }))
-    {
-        @Html.AntiForgeryToken()
+{
+    @Html.AntiForgeryToken()
 
-        @Html.HiddenFor(m => m.PersonId)
+    @Html.HiddenFor(m => m.PersonId)
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Number, new { @class = "sr-only" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Number, new { @class = "form-control k-textbox", @placeholder = "Phone Number" })<br/>
-                @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Number, new { @class = "sr-only" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Number, new { @class = "form-control k-textbox", @placeholder = "Phone Number" })<br />
+            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PhoneTypeId, "Type", new { @class = "sr-only" })
-            <div class="col-md-10">
-                @(Html.Kendo().DropDownListFor(m => m.PhoneTypeId).Name("PhoneTypeId").Text("Name").Value("Id").BindTo(ViewBag.PhoneTypeId).OptionLabel("-- Select Type --"))<br/>
-                @Html.ValidationMessageFor(model => model.PhoneTypeId, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PhoneTypeId, "Type", new { @class = "sr-only" })
+        <div class="col-md-10">
+            @(Html.Kendo().DropDownListFor(m => m.PhoneTypeId).Name("PhoneTypeId").Text("Name").Value("Id").BindTo(ViewBag.PhoneTypeId).OptionLabel("-- Select Type --"))<br />
+            @Html.ValidationMessageFor(model => model.PhoneTypeId, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <button type="submit" class="btn btn-default">Add Phone</button>
+    <button type="submit" class="btn btn-default">Add Phone</button>
 
-    }
+}

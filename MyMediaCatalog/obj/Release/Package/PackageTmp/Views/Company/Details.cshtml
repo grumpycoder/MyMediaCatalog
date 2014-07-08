@@ -1,0 +1,82 @@
+﻿@model MyMediaCatalog.Domain.Company
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2 id="header">@ViewBag.Title</h2>
+
+<div>
+    <hr />
+    <div class="row">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.WebsiteUrl)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.WebsiteUrl)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+    </p>
+    <hr />
+    <div class="row">
+        <h4>Phones</h4>
+        <div class="well well-sm">
+            @Html.Action("CreatePhone", "Company", new { @companyId = Model.Id })
+        </div>
+        <div id="phoneListView" class="col-md-6">
+            @Html.Partial("_PhoneListView", Model.CompanyPhones)
+        </div>
+    </div>
+    
+    <div class="row">
+        <h4>Addresses</h4>
+        <div class="well well-sm">
+            @Html.Action("CreateAddress", "Company", new { @companyId = Model.Id })
+        </div>
+        <div id="addressListView" class="col-md-6">
+            @Html.Partial("_AddressListView", Model.CompanyAddresses)
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <h4>Media</h4>
+        <div class="well well-sm">
+            @Html.Action("CreateCompanyMedia", "Media", new { @companyId = Model.Id })
+        </div>
+        <div id="mediaListView" class="col-md-6" style="overflow-x: hidden; overflow-y: auto;">
+            @Html.Partial("../Media/_MediaListView", Model.Media)
+        </div>
+    </div>
+
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+</p>
+
+
+<script type="text/javascript">
+    function onSuccess() {
+        $('#header').text($('#Name').val());
+
+        $('form select').val(null);
+        $('form input[type="text"]').val(null);
+    }
+
+</script>

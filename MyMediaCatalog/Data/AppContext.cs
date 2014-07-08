@@ -27,6 +27,7 @@ namespace MyMediaCatalog.Data
         public DbSet<PhoneType> PhoneTypes { get; set; }
         public DbSet<PersonPhone> PersonPhones { get; set; }
         public DbSet<CompanyPhone> CompanyPhones { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

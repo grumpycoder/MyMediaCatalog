@@ -1,4 +1,4 @@
-﻿@model MyMediaCatalog.Domain.Media
+﻿@model Media
 
 @{
     ViewBag.Title = Model.Title;
@@ -85,7 +85,7 @@
             @Html.Action("CreateNewStaffMember", "People", new { mediaId = Model.Id })
         </div>
         <div id="staffListView" style="overflow-x: hidden; overflow-y: auto;" class="col-md-6">
-            @Html.Partial("../People/_StaffMembers", Model.StaffMembers)
+            @Html.Partial("../People/_StaffMembers", Model.StaffMembers.Where(x => x.IsDeleted == false))
         </div>
     </div>
 

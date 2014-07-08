@@ -1,0 +1,145 @@
+﻿@model CompanyAddressViewModel
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title" id="myModalLabel">Company Address</h4>
+</div>
+
+@using (Html.BeginForm("CreateAddress", "Company", FormMethod.Post, new { @class = "modal-form", id="frmAddress" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.CompanyId)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="modal-body">
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AddressTypeId, "Type")
+            <div>
+                @(Html.Kendo().DropDownListFor(m => m.AddressTypeId).Name("AddressTypeId").Text("Name").Value("Id").BindTo(ViewBag.AddressTypeId).OptionLabel("-- Select Type --"))
+                @Html.ValidationMessageFor(model => model.AddressTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Street)
+            <div>
+                @Html.TextBoxFor(model => model.Street, new { @placeholder = "Street", @class = "form-control" })
+                @Html.TextBoxFor(model => model.Street2, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.City)
+            <div>
+                @*@Html.TextBoxFor(model => model.City, new { @placeholder = "City", @class = "form-control" })*@
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateId, "State")
+            <div>
+                @*@(Html.Kendo().DropDownListFor(m => m.StateId).Name("StateId").Text("Abbr").Value("Id").BindTo(ViewBag.StateId).OptionLabel("-- Select State --"))*@
+                @(Html.Kendo().DropDownListFor(m => m.StateId).Name("StateId").Text("Abbr").Value("Id")
+                      .DataSource(src =>
+                          src.Read(r => r.Action("GetStatesList", "Home").Data("filterStates")).ServerFiltering(true))
+                      .DataTextField("Abbr").DataValueField("Id")
+                      .OptionLabel("-- Select State --")
+                      .CascadeFrom("CountryId")
+                      .AutoBind(false)
+                      )
+                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostalCode)
+            <div>
+                @Html.TextBoxFor(model => model.PostalCode, new { @placeholder = "Postal Code", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PostalCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CountryId, "Country")
+            <div>
+                @*@(Html.Kendo().DropDownListFor(model => model.CountryId).Name("CountryId").BindTo(ViewBag.CountryId as SelectList).OptionLabel("-- Select Country --").DataValueField("CountryId"))*@
+                @(Html.Kendo().DropDownListFor(m => m.CountryId).Name("CountryId").BindTo(ViewBag.CountryId as SelectList).Text("Name").Value("Id"))
+                @*@Html.DropDownListFor(model => model.CountryId, null, "-- Select Country --", new { @class = "form-control" })*@
+                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </div>
+    
+    
+        
+    <div class="ui-widget">
+        <label for="city2">Your city: </label>
+        <input id="city2" class="k-textbox">
+    </div>
+    <div class="ui-widget" style="margin-top:2em; font-family:Arial">
+        Result:
+        <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+    </div>
+    
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+
+}
+
+
+<script>
+    $(function () {
+        console.log('ready');
+
+        function log(message) {
+            $("<div>").text(message).prependTo("#log");
+            $("#log").scrollTop(0);
+        }
+
+        $("#city2").autocomplete({
+                source: function (request, response) {
+                $.ajax({
+                    url: "http://gd.geobytes.com/AutoCompleteCity?filter=" + $('#CountryId').text(),
+                    dataType: "jsonp",
+                    data: {
+                        q: request.term
+                    },
+                    success: function (data) {
+                        console.log('got it');
+                        console.log(data);
+                        response(data);
+                    }
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {
+                log(ui.item ?
+                  "Selected: " + ui.item.label :
+                  "Nothing selected, input was " + this.value);
+            },
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            }
+        });
+
+        $('#city2').autocomplete("option", "appendTo", "#frmAddress");
+
+    });
+
+</script>

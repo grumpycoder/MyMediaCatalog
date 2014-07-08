@@ -2,12 +2,11 @@
 
 @using (Ajax.BeginForm("CreatePhone", "Company", new AjaxOptions
 {
-                                                                    HttpMethod = "POST",
-                                                                    OnFailure = "onFailure()",
-                                                                    InsertionMode = InsertionMode.Replace,
-                                                                    UpdateTargetId = "phoneListView",
-                                                                    OnSuccess = "onSuccess"
-                                                                }, new { @class = "form-inline", id = "createPhone" }))
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "phoneListView",
+    OnSuccess = "onSuccess"
+}, new { @class = "form-inline", id = "createPhone" }))
 {
     @Html.AntiForgeryToken()
 
@@ -18,7 +17,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Number, new { @class = "sr-only" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Number, new { @class = "form-control k-textbox", @placeholder = "Phone Number" })
+            @Html.TextBoxFor(model => model.Number, new { @class = "form-control k-textbox", @placeholder = "Phone Number", type="tel" })<br />
             @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -26,7 +25,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.PhoneTypeId, "Type", new { @class = "sr-only" })
         <div class="col-md-10">
-            @(Html.Kendo().DropDownListFor(m => m.PhoneTypeId).Name("PhoneTypeId").Text("Name").Value("Id").BindTo(ViewBag.PhoneTypeId).OptionLabel("-- Select Type --"))
+            @(Html.Kendo().DropDownListFor(m => m.PhoneTypeId).Name("PhoneTypeId").Text("Name").Value("Id").BindTo(ViewBag.PhoneTypeId).OptionLabel("-- Select Type --"))<br />
             @Html.ValidationMessageFor(model => model.PhoneTypeId, "", new { @class = "text-danger" })
         </div>
     </div>

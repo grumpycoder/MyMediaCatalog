@@ -164,6 +164,8 @@ namespace MyMediaCatalog.Controllers
         {
             ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
             ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            ViewBag.CountryId = new SelectList(db.Countries, "Id", "Abbr");
+
             var addr = new PersonAddressViewModel()
             {
                PersonId = personId
@@ -172,7 +174,7 @@ namespace MyMediaCatalog.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAddress([Bind(Include = "PersonId,AddressTypeId,Street,Street2,City,StateId,PostalCode")] PersonAddressViewModel addressViewModel)
+        public ActionResult CreateAddress([Bind(Include = "PersonId,AddressTypeId,Street,Street2,City,StateId,PostalCode,CountryId")] PersonAddressViewModel addressViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -187,6 +189,7 @@ namespace MyMediaCatalog.Controllers
                         City = addressViewModel.City,
                         StateId = addressViewModel.StateId,
                         PostalCode = addressViewModel.PostalCode,
+                        CountryId = addressViewModel.CountryId, 
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now,
                         CreatedUser = User.Identity.Name,
@@ -199,6 +202,8 @@ namespace MyMediaCatalog.Controllers
             }
             ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
             ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
+            ViewBag.CountryId = new SelectList(db.Countries, "Id", "Abbr");
+
             return PartialView("_CreateAddress");
             //var list = db.PersonAddresses.Where(a => a.PersonId == address.PersonId).Include(x => x.AddressType).Include(x => x.Address.State);
             //return PartialView("_AddressListView", list);
@@ -227,12 +232,12 @@ namespace MyMediaCatalog.Controllers
             //TODO: Code Smell. Refactor If..Else statement
             if (string.IsNullOrWhiteSpace(term))
             {
-                var list = db.Persons.Where(x => x.IsDeleted == false);
+                var list = db.Persons.Where(x => x.IsDeleted == false).Project().To<PersonViewModel>();
                 return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
             }
             else
             {
-                var list = db.Persons.Where(x => x.IsDeleted == false).Where(x => x.Lastname.Contains(term) || x.Firstname.Contains(term));
+                var list = db.Persons.Where(x => x.IsDeleted == false).Where(x => x.Lastname.Contains(term) || x.Firstname.Contains(term)).Project().To<PersonViewModel>(); ;
                 return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
             }
         }
@@ -240,7 +245,7 @@ namespace MyMediaCatalog.Controllers
         public ActionResult CreateNewStaffMember(int mediaId)
         {
             ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
-            var staff = new StaffMemberViewModel { MediaId = mediaId };
+            var staff = new StaffMemberViewModel { MediaId = mediaId, PersonId = null};
 
             return PartialView("_CreateStaffMember", staff);
         }
@@ -249,57 +254,61 @@ namespace MyMediaCatalog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateStaffMember([Bind(Include = "PersonId,RoleId,MediaId,Name,Title")] StaffMemberViewModel model)
         {
-            if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            if (model.PersonId.IsInt())
+            if (ModelState.IsValid)
             {
-                var staff = new StaffMember
+                if (model.PersonId.IsInt())
                 {
-                    PersonId = Convert.ToInt32(model.PersonId),
-                    RoleId = model.RoleId,
-                    MediaId = model.MediaId,
-                    ModifiedUser = User.Identity.Name,
-                    CreatedUser = User.Identity.Name,
-                    DateCreated = DateTime.Now,
-                    DateModified = DateTime.Now
-                };
-                db.StaffMembers.Add(staff);
-                db.SaveChanges();
-            }
-            else
-            {
-                //Create new person record if PersonId is not an int
-                var staff = new StaffMember
-                {
-                    Person = new Person
+                    var staff = new StaffMember
                     {
-                        Firstname = model.PersonId.Split(new[] { ' ', '\t' }, StringSplitOptions.None)[0],
-                        Lastname = model.PersonId.Split(new[] { ' ', '\t' }, StringSplitOptions.None)[1],
-                        Title = model.Title,
+                        PersonId = Convert.ToInt32(model.PersonId),
+                        RoleId = model.RoleId,
+                        MediaId = model.MediaId,
                         ModifiedUser = User.Identity.Name,
                         CreatedUser = User.Identity.Name,
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now
-                    },
-                    ModifiedUser = User.Identity.Name,
-                    CreatedUser = User.Identity.Name,
-                    DateCreated = DateTime.Now,
-                    DateModified = DateTime.Now,
-                    RoleId = model.RoleId,
-                    MediaId = model.MediaId
-                };
+                    };
+                    db.StaffMembers.Add(staff);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    //Create new person record if PersonId is not an int
+                    var staff = new StaffMember
+                    {
+                        Person = new Person
+                        {
+                            Firstname = model.PersonId.Split(new[] {' ', '\t'}, StringSplitOptions.None)[0],
+                            Lastname = model.PersonId.Split(new[] {' ', '\t'}, StringSplitOptions.None)[1],
+                            Title = model.Title,
+                            ModifiedUser = User.Identity.Name,
+                            CreatedUser = User.Identity.Name,
+                            DateCreated = DateTime.Now,
+                            DateModified = DateTime.Now
+                        },
+                        ModifiedUser = User.Identity.Name,
+                        CreatedUser = User.Identity.Name,
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now,
+                        RoleId = model.RoleId,
+                        MediaId = model.MediaId
+                    };
 
-                db.StaffMembers.Add(staff);
-                db.SaveChanges();
+                    db.StaffMembers.Add(staff);
+                    db.SaveChanges();
+                }
+
+                //if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+
+                var list =
+                    db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.MediaId == model.MediaId)
+                        .Include(x => x.Person)
+                        .Include(x => x.Role);
+                return PartialView("_StaffMembers", list);
+
+                
             }
-
-            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
-
-            var list =
-                db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.MediaId == model.MediaId)
-                    .Include(x => x.Person)
-                    .Include(x => x.Role);
-            return PartialView("_StaffMembers", list);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         public ActionResult DeleteStaffMember(int id)

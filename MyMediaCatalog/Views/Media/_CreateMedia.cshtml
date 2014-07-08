@@ -1,9 +1,8 @@
-﻿@model MyMediaCatalog.Domain.Media
+﻿@model Media
 
 @using (Ajax.BeginForm("Create", "Media", new AjaxOptions
 {
                                                                     HttpMethod = "POST",
-                                                                    OnFailure = "onFailure()",
                                                                     InsertionMode = InsertionMode.Replace,
                                                                     UpdateTargetId = "mediaListView",
                                                                     OnSuccess = "onSuccess"

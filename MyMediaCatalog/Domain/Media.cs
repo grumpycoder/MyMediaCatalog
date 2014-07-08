@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Policy;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace MyMediaCatalog.Domain
 {
     public class Media : SoftDelete
     {
+        [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }

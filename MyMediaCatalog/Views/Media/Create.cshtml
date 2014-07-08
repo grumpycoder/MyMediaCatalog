@@ -1,4 +1,4 @@
-﻿@model MyMediaCatalog.Domain.Media
+﻿@model Media
 
 @{
     ViewBag.Title = "Create";
@@ -81,7 +81,12 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanyId, "Company", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @(Html.Kendo().DropDownListFor(m => m.CompanyId).Name("CompanyId").Text("Name").Value("Id").BindTo(ViewBag.CompanyId))
+                @(Html.Kendo().ComboBoxFor(m => m.CompanyId).Name("CompanyId").AutoBind(true).Placeholder("-- Select Company --")
+                  .DataValueField("Id").DataTextField("Name")
+                  .Filter(FilterType.Contains)
+                  .HighlightFirst(true)
+                  .DataSource(src => src.Read("GetCompanyList", "Company").ServerFiltering(true)))
+
                 @Html.ValidationMessageFor(model => model.CompanyId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -89,7 +94,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MediaTypeId, "Type", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @(Html.Kendo().DropDownListFor(m => m.MediaTypeId).Name("MediaTypeId").Text("Name").Value("Id").BindTo(ViewBag.MediaTypeId))
+                @(Html.Kendo().DropDownListFor(m => m.MediaTypeId).Name("MediaTypeId").Text("Name").Value("Id").BindTo(ViewBag.MediaTypeId).OptionLabel("-- Select Type --"))
                 @Html.ValidationMessageFor(model => model.MediaTypeId, "", new { @class = "text-danger" })
             </div>
         </div>

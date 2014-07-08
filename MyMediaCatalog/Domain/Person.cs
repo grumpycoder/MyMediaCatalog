@@ -13,7 +13,6 @@ namespace MyMediaCatalog.Domain
         [Display(Name = "Last Name")]
         public string Lastname { get; set; }
         [UIHint("EmailAddress")]
-        [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 

@@ -11,18 +11,18 @@
     {
         <li class="list-group-item">
             <div>
-                @Html.DisplayName(item.MediaType.Name)
-            </div>
-            <div>
-                @Html.ActionLink(item.Title, "Details", "Media", new { id = @item.Id }, null) 
+                @Html.ActionLink((string.IsNullOrWhiteSpace(item.Title) ? "Unknown" : item.Title), "Details", "Media", new { id = @item.Id }, null) 
                 <span class="pull-right">
                     @Ajax.ActionLink(" ", "Delete", "Media", new { item.Id }, new AjaxOptions
                     {
-                        UpdateTargetId = "mediaListView"
+                        UpdateTargetId = "mediaListView", 
+                        HttpMethod = "POST"
                     }, new { @class = "glyphicon glyphicon-remove" })
                 </span>
             </div>
-
+            <div>
+                @Html.DisplayName(item.MediaType.Name)
+            </div>
         </li>
     }
 </ul>

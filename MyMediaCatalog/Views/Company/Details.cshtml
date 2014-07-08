@@ -1,4 +1,4 @@
-﻿@model MyMediaCatalog.Domain.Company
+﻿@model Company
 
 @{
     ViewBag.Title = Model.Name;
@@ -47,7 +47,7 @@
     <div class="row">
         <h4>Addresses</h4>
         <div class="well well-sm">
-            @Html.Action("CreateAddress", "Company", new { @companyId = Model.Id })
+            @Html.ActionLink("New Address", "CreateAddress", new { @companyId = Model.Id }, new { id = "btnCreate", @class = "btn btn-small btn-info" })
         </div>
         <div id="addressListView" class="col-md-6">
             @Html.Partial("_AddressListView", Model.CompanyAddresses)
@@ -61,7 +61,7 @@
             @Html.Action("CreateCompanyMedia", "Media", new { @companyId = Model.Id })
         </div>
         <div id="mediaListView" class="col-md-6" style="overflow-x: hidden; overflow-y: auto;">
-            @Html.Partial("../Media/_MediaListView", Model.Media)
+            @Html.Partial("../Media/_MediaListView", Model.Media.Where(x => x.IsDeleted == false))
         </div>
     </div>
 
@@ -71,12 +71,149 @@
 </p>
 
 
-<script type="text/javascript">
-    function onSuccess() {
-        $('#header').text($('#Name').val());
+@*<div class="ui-widget">
+    <label for="city">Your city: </label>
+    <input id="city" class="k-textbox">
+</div>
+<div class="ui-widget" style="margin-top:2em; font-family:Arial">
+    Result:
+    <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+</div>*@
 
+@*@(Html.Kendo().AutoComplete().Name("City2").DataSource(src => src.Read(r => r.Url("http://gd.geobytes.com/AutoCompleteCity").Data("onAdditionalData"))))*@
+
+
+
+
+
+<div class="modal fade" id="dialogDiv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body" id="dialogContent">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+<script type="text/javascript">
+    
+    function GetCities(term) {
+        console.log(term);
+        $.getJSON(
+            "http://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&q=" + term, function(data) {
+                console.log(data);
+            }
+        );
+    }
+
+    function onAdditionalData() {
+        console.log($('#City2').val());
+        return {
+            term: $('#City2').val()
+    }
+    };
+
+
+    $(function () {
+
+        //Optional: turn the chache off
+        $.ajaxSetup({ cache: false });
+
+        $('#btnCreate').click(function () {
+            $('#dialogContent').load(this.href, function () {
+                $('#dialogDiv').modal({
+                    backdrop: 'static',
+                    keyboard: true
+                }, 'show');
+                bindForm(this);
+            });
+            return false;
+        });
+
+
+        $('#city2').kendoAutoComplete({
+            minLength: 3,
+            dataSource: {
+                type: "jsonp",
+                serverFiltering: true,
+                transport: {
+                    read: "http://gd.geobytes.com/AutoCompleteCity"
+                }
+            }
+        });
+
+        function log(message) {
+            $("<div>").text(message).prependTo("#log");
+            $("#log").scrollTop(0);
+        }
+
+        $("#city").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "http://gd.geobytes.com/AutoCompleteCity",
+                    dataType: "jsonp",
+                    data: {
+                        q: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {
+                log(ui.item ?
+                  "Selected: " + ui.item.label :
+                  "Nothing selected, input was " + this.value);
+            },
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            }
+        });
+
+
+    });
+
+    function bindForm(dialog) {
+        $('form', dialog).submit(function () {
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function (result) {
+                    if (result.success) {
+                        $('#dialogDiv').modal('hide');
+                        var url = "@Url.Action("GetCompanyAddress", "Company", new {id = Model.Id})";
+                        $('#addressListView').load(url);
+                        // Refresh:
+                        // location.reload();
+                    } else {
+                        $('#dialogContent').html(result);
+                        bindForm();
+                    }
+                }
+            });
+            return false;
+        });
+    }
+    
+    function onSuccess() {
         $('form select').val(null);
         $('form input[type="text"]').val(null);
     }
+    
+    function filterStates() {
+        return {
+            countryId: $("#CountryId").val()
+        };
+    };
 
 </script>

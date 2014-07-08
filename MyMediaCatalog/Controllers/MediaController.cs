@@ -44,7 +44,7 @@ namespace MyMediaCatalog.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name");
+            //ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name");
             ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name");
             return View();
         }
@@ -69,7 +69,7 @@ namespace MyMediaCatalog.Controllers
 
             if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
 
-            var list = db.Media.Where(x => x.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType);
+            var list = db.Media.Where(x => x.IsDeleted == false).Where(x => x.CompanyId == media.CompanyId).Include(m => m.Company).Include(m => m.MediaType);
             return PartialView("_MediaListView", list);
         }
 
@@ -84,7 +84,7 @@ namespace MyMediaCatalog.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", media.CompanyId);
+            //ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", media.CompanyId);
             ViewBag.MediaTypeId = new SelectList(db.MediaTypes, "Id", "Name", media.MediaTypeId);
             return View(media);
         }
@@ -122,8 +122,8 @@ namespace MyMediaCatalog.Controllers
 
             if (!Request.IsAjaxRequest()) return RedirectToAction("Index");
 
-            var list = db.Media.Where(x => x.IsDeleted == false).Include(m => m.Company).Include(m => m.MediaType).ToList();
-            return PartialView("_MediaList", list);
+            var list = db.Media.Where(x => x.IsDeleted == false).Where(x => x.CompanyId == media.CompanyId).Include(m => m.Company).Include(m => m.MediaType).ToList();
+            return PartialView("_MediaListView", list);
         }
 
         public ActionResult CreateCompanyMedia(int? companyId)
@@ -136,31 +136,39 @@ namespace MyMediaCatalog.Controllers
             return PartialView("_CreateMedia", media);
         }
 
-        public ActionResult CreatePersonMedia()
+        public ActionResult CreatePersonMedia(int personId)
         {
             ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
             ViewBag.MediaId = new SelectList(db.Media.Where(x => x.IsDeleted == false), "Id", "Title");
+            var staff = new StaffMember {PersonId = personId}; 
 
-            return PartialView("_CreatePersonMedia");
+            return PartialView("_CreatePersonMedia", staff);
         }
 
         [HttpPost]
         public ActionResult CreatePersonMedia([Bind(Include = "PersonId,MediaId,RoleId")] StaffMember staff)
         {
-            if (!ModelState.IsValid) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (ModelState.IsValid)
+            {
+                staff.DateCreated = DateTime.Now;
+                staff.DateModified = DateTime.Now;
+                staff.CreatedUser = User.Identity.Name;
+                staff.ModifiedUser = User.Identity.Name;
 
-            staff.DateCreated = DateTime.Now;
-            staff.DateModified = DateTime.Now;
-            staff.CreatedUser = User.Identity.Name;
-            staff.ModifiedUser = User.Identity.Name;
+                db.StaffMembers.Add(staff);
+                db.SaveChanges();
 
-            db.StaffMembers.Add(staff);
-            db.SaveChanges();
 
-            if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
+                if (!Request.IsAjaxRequest()) return new HttpStatusCodeResult(HttpStatusCode.OK);
 
-            var list = db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.PersonId == staff.PersonId).Include(m => m.Media).Include(r => r.Role);
-            return PartialView("_PersonMediaListView", list);
+                var list = db.StaffMembers.Where(x => x.IsDeleted == false).Where(x => x.PersonId == staff.PersonId).Include(m => m.Media).Include(r => r.Role);
+                return PartialView("_PersonMediaListView", list);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //ViewBag.RoleId = new SelectList(db.Roles, "Id", "Name");
+            //ViewBag.MediaId = new SelectList(db.Media.Where(x => x.IsDeleted == false), "Id", "Title");
+            //return PartialView("_CreatePersonMedia", staff);
         }
 
         public ActionResult DeletePersonMedia(int id)
@@ -188,7 +196,7 @@ namespace MyMediaCatalog.Controllers
         public ActionResult GetMediaList(string term)
         {
             if (term == null) term = Request.Params["filter[filters][0][value]"];
-            //TODO: Code Smell. Need refactor if..else statement
+            //TODO: Code Smell. Refactor If..Else statement
             if (string.IsNullOrWhiteSpace(term))
             {
                 var list = db.Media.Where(x => x.IsDeleted == false).Select(x => new
@@ -196,12 +204,12 @@ namespace MyMediaCatalog.Controllers
                     x.Id,
                     x.Title,
                     Company = x.Company.Name
-                });
+                }).Take(20);
                 return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
             }
             else
             {
-                var list = db.Media.Where(x => x.IsDeleted == false).Select(x => new
+                var list = db.Media.Where(x => x.IsDeleted == false).Where(x => x.Title.Contains(term)).Select(x => new
                 {
                     x.Id,
                     x.Title,
@@ -209,6 +217,7 @@ namespace MyMediaCatalog.Controllers
                 });
                 return Json(list.ToArray(), JsonRequestBehavior.AllowGet);
             }
+
         }
         
         protected override void Dispose(bool disposing)
