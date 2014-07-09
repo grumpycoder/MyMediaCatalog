@@ -58,7 +58,7 @@
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Kendo.Mvc">
-      <HintPath>..\lib\KENDOUIMVC\2014.1.528.545\Kendo.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Telerik\UI for ASP.NET MVC Q1 2014\wrappers\aspnetmvc\Binaries\Mvc5\Kendo.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -187,7 +187,6 @@
     <Compile Include="Domain\CompanyAddress.cs" />
     <Compile Include="Domain\CompanyPhone.cs" />
     <Compile Include="Domain\Country.cs" />
-    <Compile Include="Domain\SoftDelete.cs" />
     <Compile Include="Domain\Media.cs" />
     <Compile Include="Domain\MediaType.cs" />
     <Compile Include="Domain\Person.cs" />
@@ -196,6 +195,9 @@
     <Compile Include="Domain\Phone.cs" />
     <Compile Include="Domain\PhoneType.cs" />
     <Compile Include="Domain\Role.cs" />
+    <Compile Include="Domain\SoftDelete.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Domain\StaffMember.cs" />
     <Compile Include="Domain\State.cs" />
     <Compile Include="Global.asax.cs">

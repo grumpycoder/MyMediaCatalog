@@ -172,3 +172,6 @@ C:\source\repos\MyMediaCatalog\MyMediaCatalog\bin\Microsoft.Owin.Security.Micros
 C:\source\repos\MyMediaCatalog\MyMediaCatalog\obj\Debug\MyMediaCatalog.csprojResolveAssemblyReference.cache
 C:\source\repos\MyMediaCatalog\MyMediaCatalog\obj\Debug\MyMediaCatalog.dll
 C:\source\repos\MyMediaCatalog\MyMediaCatalog\obj\Debug\MyMediaCatalog.pdb
+C:\Users\mark.lawrence\Source\Repos\MyMediaCatalog\MyMediaCatalog\obj\Debug\MyMediaCatalog.csprojResolveAssemblyReference.cache
+C:\Users\mark.lawrence\Source\Repos\MyMediaCatalog\MyMediaCatalog\obj\Debug\MyMediaCatalog.dll
+C:\Users\mark.lawrence\Source\Repos\MyMediaCatalog\MyMediaCatalog\obj\Debug\MyMediaCatalog.pdb
