@@ -1,0 +1,13 @@
+﻿@model String
+
+
+@if (!string.IsNullOrWhiteSpace(Model))
+{
+    @ViewData.TemplateInfo.FormattedModelValue
+}
+else
+{
+    <text>&nbsp;</text>
+}
+
+
