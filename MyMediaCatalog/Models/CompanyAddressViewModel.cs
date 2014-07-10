@@ -11,11 +11,10 @@ namespace MyMediaCatalog.Models
         public string Street { get; set; }
         public string Street2 { get; set; }
         public string City { get; set; }
-        public int? StateId { get; set; }
+        public string StateAbbr { get; set; }
+        public string StateFullName { get; set; }
         [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
         public int? CountryId { get; set; }
-
-
     }
 }

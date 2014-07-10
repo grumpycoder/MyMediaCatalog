@@ -1,13 +1,12 @@
-﻿@model MyMediaCatalog.Domain.StaffMember
+﻿@model StaffMember
 
-@using (Ajax.BeginForm("CreatePersonMedia", "Media", new AjaxOptions
+@using (Ajax.BeginForm("CreatePersonMedia", "Media", null, new AjaxOptions
 {
-                                                                    HttpMethod = "POST",
-                                                                    OnFailure = "onFailure()",
-                                                                    InsertionMode = InsertionMode.Replace,
-                                                                    UpdateTargetId = "mediaListView",
-                                                                    OnSuccess = "onSuccess"
-                                                                }, new { @class = "form-inline", id = "createMedia" }))
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "mediaListView",
+    OnSuccess = "onSuccess"
+}, new { @class = "form-inline" }))
 {
     @Html.AntiForgeryToken()
 
@@ -18,7 +17,14 @@
     <div class="form-group">
         @Html.LabelFor(model => model.MediaId, "Media", new { @class = "sr-only" })
         <div class="col-md-10">
-            @(Html.Kendo().ComboBoxFor(m => m.MediaId).Name("MediaId").DataTextField("Title").DataValueField("Id").Placeholder("-- Select Media --")
+
+
+            @(Html.Kendo().ComboBoxFor(m => m.MediaId).Name("MediaId").AutoBind(true).Placeholder("-- Select Media --")
+                  .DataValueField("Id").DataTextField("Title")
+                  .Filter(FilterType.Contains)
+                  .TemplateId("mediaTemplate")
+                  .HighlightFirst(true)
+                  .Events(e => e.DataBound("onDataBound"))
                   .DataSource(src => src.Read("GetMediaList", "Media").ServerFiltering(true)))
 
             @Html.ValidationMessageFor(model => model.MediaId, "", new { @class = "text-danger" })
@@ -37,10 +43,22 @@
 
 }
 
+
+<script id="mediaTemplate" type="text/x-kendo-template">
+    <strong>#: Title #</strong>
+    <br />
+    <small>#= Company #</small>
+</script>
+
+
 <script type="text/javascript">
     function onSuccess() {
         $('form select').val(null);
         $('form input[type="text"]').val(null);
     }
 
+    function onDataBound() {
+        if ($('#MediaId').data("kendoComboBox").value() === '0')
+            $('#MediaId').data("kendoComboBox").text('');
+    }
 </script>

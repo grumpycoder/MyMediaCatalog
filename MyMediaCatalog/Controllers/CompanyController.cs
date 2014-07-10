@@ -156,7 +156,7 @@ namespace MyMediaCatalog.Controllers
         {
             ViewBag.AddressTypeId = new SelectList(db.AddressTypes, "Id", "Name");
             ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
-            ViewBag.CountryId = new SelectList(db.Countries, "Id", "Abbr");
+            ViewBag.CountryId = new SelectList(db.Countries, "Id", "Name");
             ViewBag.CountryList = new SelectList(db.Countries, "Id", "Abbr", 252);
 
             var addr = new CompanyAddressViewModel()
@@ -168,22 +168,30 @@ namespace MyMediaCatalog.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAddress([Bind(Include = "CompanyId,AddressTypeId,Street,Street2,City,StateId,PostalCode,CountryId")] CompanyAddressViewModel addressViewModel)
+        public ActionResult CreateAddress([Bind(Include = "CompanyId,AddressTypeId,Street,Street2,City,StateAbbr,StateFullName,PostalCode,CountryId")] CompanyAddressViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var state = db.States.FirstOrDefault(x => x.CountryId == model.CountryId);
+                if (state == null)
+                {
+                    state = new State() {Abbr = model.StateAbbr, Name = model.StateFullName, CountryId = model.CountryId};
+                    db.States.Add(state);
+                    db.SaveChanges();
+                }
+
                 var address = new CompanyAddress
                 {
-                    CompanyId = addressViewModel.CompanyId,
-                    AddressTypeId = addressViewModel.AddressTypeId,
+                    CompanyId = model.CompanyId,
+                    AddressTypeId = model.AddressTypeId,
                     Address = new Address
                     {
-                        Street = addressViewModel.Street,
-                        Street2 = addressViewModel.Street2,
-                        City = addressViewModel.City,
-                        StateId = addressViewModel.StateId,
-                        PostalCode = addressViewModel.PostalCode,
-                        CountryId = addressViewModel.CountryId, 
+                        Street = model.Street,
+                        Street2 = model.Street2,
+                        City = model.City,
+                        StateId = state.Id,
+                        PostalCode = model.PostalCode,
+                        CountryId = model.CountryId, 
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now,
                         CreatedUser = User.Identity.Name,
@@ -198,7 +206,7 @@ namespace MyMediaCatalog.Controllers
             ViewBag.StateId = new SelectList(db.States, "Id", "Abbr");
             ViewBag.CountryId = new SelectList(db.Countries, "Id", "Abbr");
 
-            return PartialView("_CreateAddress");
+            return PartialView("_CreateAddress", model);
 
         }
 

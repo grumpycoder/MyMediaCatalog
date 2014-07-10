@@ -1,24 +1,22 @@
-﻿@model MyMediaCatalog.Models.StaffMemberViewModel
+﻿@model StaffMemberViewModel
 
-@using (Ajax.BeginForm("CreateStaffMember", "People", new AjaxOptions()
+@using (Ajax.BeginForm("CreateStaffMember", "People", new AjaxOptions
 {
+                                                                    OnSuccess = "onSuccess",
                                                                     HttpMethod = "POST",
-                                                                    OnFailure = "onFailure()",
                                                                     InsertionMode = InsertionMode.Replace,
                                                                     UpdateTargetId = "staffListView"
                                                                 }, new { @class = "form-inline", id = "createStaffMember" }))
 {
     @Html.AntiForgeryToken()
     
- 
-        
     @Html.HiddenFor(m => m.MediaId)
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         @Html.LabelFor(model => model.Name, new { @class = "sr-only" })
         <div class="col-md-10">
             @(Html.Kendo().ComboBoxFor(m => m.PersonId).Name("PersonId").AutoBind(true).Placeholder("-- Select Person --")
-                  .DataValueField("Id").DataTextField("Lastname")
+                  .DataValueField("Id").DataTextField("FullName")
                   .Filter(FilterType.Contains)
                   .TemplateId("personTemplate")
                   .HighlightFirst(true)
@@ -49,8 +47,13 @@
 }
 
 <script id="personTemplate" type="text/x-kendo-template">
-    <strong>#: Firstname # #: Lastname #</strong>
+    <strong>#: FullName #</strong>
     <br />
     <small>#= Title != null ? Title : 'No Title' #</small>
 </script>
 
+<script>
+    function onSuccess() {
+        $.validator.unobtrusive.parse($(result));
+    }
+</script>

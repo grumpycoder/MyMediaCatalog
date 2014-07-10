@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MyMediaCatalog.Domain.CompanyAddress>
+﻿@model IEnumerable<CompanyAddress>
            
 <ul class="list-group">
     @if (!Model.Any())
@@ -14,9 +14,14 @@
                 @Html.DisplayName(item.AddressType.Name)
             </div>
             <div>
-                @item.Address.Street <br />
+                @item.Address.Street
+                @if(!string.IsNullOrWhiteSpace(@item.Address.Street2)){
+                <br />
                 @item.Address.Street2 <br />
-                @item.Address.City @item.Address.State.Abbr @item.Address.PostalCode
+                }
+                @string.Format("{0}, {1} {2}", @item.Address.City, @item.Address.State.Abbr, @item.Address.PostalCode)<br />
+                @item.Address.Country.Name
+
                 <span class="pull-right">
                     @Ajax.ActionLink(" ", "DeleteAddress", "Company", new { item.Id }, new AjaxOptions
                     {

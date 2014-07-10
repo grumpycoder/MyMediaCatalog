@@ -8,8 +8,10 @@ namespace MyMediaCatalog.Domain
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        [Required(ErrorMessage = "First Name is required.")]
         [Display(Name = "First Name")]
         public string Firstname { get; set; }
+        [Required(ErrorMessage = "Last Name is required.")]
         [Display(Name = "Last Name")]
         public string Lastname { get; set; }
         [UIHint("EmailAddress")]

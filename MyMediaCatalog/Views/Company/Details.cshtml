@@ -1,9 +1,7 @@
 ﻿@model Company
-
 @{
     ViewBag.Title = Model.Name;
 }
-
 <h2 id="header">@ViewBag.Title</h2>
 
 <div>
@@ -43,7 +41,7 @@
             @Html.Partial("_PhoneListView", Model.CompanyPhones)
         </div>
     </div>
-    
+
     <div class="row">
         <h4>Addresses</h4>
         <div class="well well-sm">
@@ -71,21 +69,6 @@
 </p>
 
 
-@*<div class="ui-widget">
-    <label for="city">Your city: </label>
-    <input id="city" class="k-textbox">
-</div>
-<div class="ui-widget" style="margin-top:2em; font-family:Arial">
-    Result:
-    <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
-</div>*@
-
-@*@(Html.Kendo().AutoComplete().Name("City2").DataSource(src => src.Read(r => r.Url("http://gd.geobytes.com/AutoCompleteCity").Data("onAdditionalData"))))*@
-
-
-
-
-
 <div class="modal fade" id="dialogDiv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -98,26 +81,7 @@
     </div>
 </div>
 
-<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-
 <script type="text/javascript">
-    
-    function GetCities(term) {
-        console.log(term);
-        $.getJSON(
-            "http://gd.geobytes.com/AutoCompleteCity?callback=?&filter=US&q=" + term, function(data) {
-                console.log(data);
-            }
-        );
-    }
-
-    function onAdditionalData() {
-        console.log($('#City2').val());
-        return {
-            term: $('#City2').val()
-    }
-    };
-
 
     $(function () {
 
@@ -134,52 +98,6 @@
             });
             return false;
         });
-
-
-        $('#city2').kendoAutoComplete({
-            minLength: 3,
-            dataSource: {
-                type: "jsonp",
-                serverFiltering: true,
-                transport: {
-                    read: "http://gd.geobytes.com/AutoCompleteCity"
-                }
-            }
-        });
-
-        function log(message) {
-            $("<div>").text(message).prependTo("#log");
-            $("#log").scrollTop(0);
-        }
-
-        $("#city").autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: "http://gd.geobytes.com/AutoCompleteCity",
-                    dataType: "jsonp",
-                    data: {
-                        q: request.term
-                    },
-                    success: function (data) {
-                        response(data);
-                    }
-                });
-            },
-            minLength: 3,
-            select: function (event, ui) {
-                log(ui.item ?
-                  "Selected: " + ui.item.label :
-                  "Nothing selected, input was " + this.value);
-            },
-            open: function () {
-                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-            },
-            close: function () {
-                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-            }
-        });
-
-
     });
 
     function bindForm(dialog) {
@@ -193,8 +111,6 @@
                         $('#dialogDiv').modal('hide');
                         var url = "@Url.Action("GetCompanyAddress", "Company", new {id = Model.Id})";
                         $('#addressListView').load(url);
-                        // Refresh:
-                        // location.reload();
                     } else {
                         $('#dialogContent').html(result);
                         bindForm();
@@ -204,12 +120,12 @@
             return false;
         });
     }
-    
+
     function onSuccess() {
         $('form select').val(null);
         $('form input[type="text"]').val(null);
     }
-    
+
     function filterStates() {
         return {
             countryId: $("#CountryId").val()
