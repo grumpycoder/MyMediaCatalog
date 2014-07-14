@@ -1,12 +1,15 @@
-﻿
-@(Html.Kendo().Grid<CompanyViewModel>().Name("grid")
+﻿@(Html.Kendo().Grid<CompanyViewModel>().Name("grid")
       .Columns(c =>
       {
           c.Bound(m => m.Name);
           c.Bound(m => m.WebsiteUrl);
           c.Bound(m => m.Email);
           c.Command(cmd =>
-              cmd.Destroy().HtmlAttributes(new { @id = "cmdDelete" })).Width(110);
+          {
+              cmd.Destroy().HtmlAttributes(new { @id = "cmdDelete" });
+              cmd.Custom("Details").Click("showDetails");
+          }).Width(190);
+
       })
       .Pageable().Sortable().Filterable().Resizable(r => r.Columns(true)).Reorderable(o => o.Columns(true)).Selectable()
       .Editable(e => e.Mode(GridEditMode.PopUp))
@@ -32,6 +35,12 @@
         if ($("#grid").data("kendoGrid").dataSource.filter() !== null)
             $("#grid").data("kendoGrid").dataSource.filter(null);
     });
+
+    function showDetails(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        location.href = kendo.format('@(Server.UrlDecode(Url.Action("Details", "Company", new { id = "{0}" })))', dataItem.Id);
+    }
 
 
     $("#grid").on("dblclick", "tr.k-state-selected", function () {

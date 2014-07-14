@@ -1,12 +1,15 @@
-﻿
-@(Html.Kendo().Grid<PersonViewModel>().Name("grid")
+﻿@(Html.Kendo().Grid<PersonViewModel>().Name("grid")
       .Columns(c =>
       {
+
           c.Bound(m => m.Firstname);
           c.Bound(m => m.Lastname);
           c.Bound(m => m.Title);
           c.Command(cmd =>
-              cmd.Destroy().HtmlAttributes(new { @id = "cmdDelete" })).Width(110);
+          {
+              cmd.Custom("Details").Click("showDetails");
+              cmd.Destroy().HtmlAttributes(new { @id = "cmdDelete" });
+          }).Width(190);
       })
       .Pageable().Sortable().Filterable().Resizable(r => r.Columns(true)).Reorderable(o => o.Columns(true)).Selectable()
       .Editable(e => e.Mode(GridEditMode.PopUp))
@@ -14,6 +17,7 @@
           .PageSize(20)
           .Batch(false)
           .Read("GetGridPersonList", "People")
+          //.Update("Edit", "People")
           .Model(m => m.Id(p => p.Id))
           .Destroy(d => d.Action("Delete", "People"))
           )
@@ -33,6 +37,11 @@
             $("#grid").data("kendoGrid").dataSource.filter(null);
     });
 
+    function showDetails(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        location.href = kendo.format('@(Server.UrlDecode(Url.Action("Details", "People", new { id = "{0}" })))', dataItem.Id);
+    }
 
     $("#grid").on("dblclick", "tr.k-state-selected", function () {
         var grid = $("#grid").data("kendoGrid");

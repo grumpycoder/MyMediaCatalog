@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -81,6 +82,27 @@ namespace MyMediaCatalog.Controllers
             {
                 person.ModifiedUser = User.Identity.Name;
                 person.DateModified = DateTime.Now;
+                db.Entry(person).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(person);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditPerson([Bind(Include = "Id,Title,Firstname,Lastname")] PersonViewModel person)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                var model = db.Persons.Find(person.Id);
+                Mapper.Map(person, model);
+
+                model.ModifiedUser = User.Identity.Name;
+                model.DateModified = DateTime.Now;
+
                 db.Entry(person).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

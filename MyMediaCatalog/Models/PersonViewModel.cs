@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace MyMediaCatalog.Models
 {
     public class PersonViewModel
     {
+        [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
         public string Title { get; set; }
         [Display(Name = "First Name")]
